@@ -74,11 +74,11 @@ db.save((err) => { if (err) {console.error(err)} })
 A document is of type `Object`.
 
 ```javascript
-const doc = {foo: 'bar', n: 42, itIs: true, fruits: ['apple', 'orange', 'pear'], pi: {name: 'Pi', val: 3.14}}
+const doc = {foo: 'bar', n: 42, bool: true, fruits: ['apple', 'orange'], pi: {val: 3.14}}
 const id = db.insert(doc)
 ```
 
-`db.inser(doc)` returns the id of the inserted document.
+`db.insert(doc)` returns the id of the inserted document.
 
 You can also bulk-insert an array of documents.
 
@@ -234,19 +234,17 @@ db.find({ planet: 'Mars' }, {planet: 0, system: 0, _id: 0})
 
 ### Counting documents
 
-You can use `count` to count documents. It has the same syntax as `find`. For
-example:
+You can use `count` to count documents. It has the same syntax as `find`. For example:
 
 ```javascript
 // Count all planets in the solar system
-db.count({ system: 'solar' })
+db.count({system: 'solar'})
 // count equals to 3
 
 // Count all documents in the datastore
 db.count({})
 // count equals to 4
 ```
-
 
 ### Updating documents
 
@@ -255,9 +253,8 @@ matching `query` according to the `update` rules:
 
 * `query` is the same kind of finding query you use with `find` and `findOne`
 * `update` specifies how the documents should be modified. It is a set of modifiers for the current fields or new fields.
-* `options` is an object with two possible parameters
-    * `multi` (defaults to `false`) which allows the modification of several
-      documents if set to true
+* `options` is an object with one possible parameter:
+    * `multi` (defaults to `false`) which allows the modification of several documents if set to `true`.
 
 Possible update options are:
 
@@ -294,18 +291,18 @@ according to `options`
 
 * `query` is the same as the ones used for finding and updating
 * `options` only one option for now: `multi` which allows the removal of
-  multiple documents if set to true. Default is false
+  multiple documents if set to true. Default is: `{multi: false}`
 
 ```javascript
 // Remove one document from the collection
 // The dafault option is {multi: false}
-const numRemoved = db.remove({ planet: 'Mars' })
-// Removes the doc of planet Mars
+const numRemoved = db.remove({planet: 'Mars'})
+// Removes the doc of planet Mars. Returns 1.
 
 // Remove multiple documents
-const numRemoved = db.remove({system: 'solar'}, {multi: true})
+db.remove({system: 'solar'}, {multi: true})
 // All planets from the solar system were removed
 
 // Removing all documents with the 'match-all' query
-const numRemoved = db.remove({}, {multi: true})
+db.remove({}, {multi: true})
 ```
