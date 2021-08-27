@@ -1,0 +1,27 @@
+{
+  "name": "@popovmp/dbil",
+  "description": "Simple, synchronous and fast document database with MongoDB syntax.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Popov MP <info@forexsb.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/popovmp/dbil",
+  "devDependencies": {
+    "@popovmp/mocha-tiny": "^1.3.1"
+  },
+  "scripts": {
+    "test": "mocha-tiny",
+    "prepublishOnly": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/popovmp/dbil.git"
+  },
+  "keywords": [
+    "document",
+    "database"
+  ],
+  "bugs": {
+    "url": "https://github.com/popovmp/dbil/issues"
+  }
+}
