@@ -13,7 +13,11 @@ Goals:
 Module name on npm is `@popovmp/dbil`.
 
 ```
+// Install
 npm install @popovmp/dbil
+
+// Test
+npm test
 ```
 
 ## API
@@ -26,7 +30,7 @@ It is a subset of MongoDB's API (the most used operations).
 * [Finding documents](#finding-documents)
     * [Basic Querying](#basic-querying)
     * [Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex](#operators-eq-ne-lt-lte-gt-gte-in-nin-exists-regex)
-    * [Logical operators ($and, $or, $not, $where)](#logical-operators-and-or-not-where)
+    * [Logical operators: $and, $or, $not, $where](#logical-operators-and-or-not-where)
     * [Projections](#projections)
 * [Counting documents](#counting-documents)
 * [Updating documents](#updating-documents)
@@ -38,14 +42,14 @@ You can use DBil as an in-memory only CB or as a persistent DB.
 
 Create in-memory only DB:
 
-```js
+```javascript
 const {getDB} = require('@popovmp/dbil')
 const db = getDB()
 ```
 
 Load a DB from file
 
-```js
+```javascript
 const {getDB} = require('@popovmp/dbil')
 const db = getDB('path/to/db.file')
 ```
@@ -57,16 +61,12 @@ const db = getDB('path/to/db.file')
 
 DBil allows you to make as many queries as you need in-memory. However, you need to explicitly save the DB when you finish.
 
-```js
+```javascript
 // queries, queries,...
 db.save() // Fire and forget.
-// db.save accepts an optional callback
 
-db.save((err) => {
-	if (err) {
-        console.error(err)
-    }
-})
+// db.save accepts an optional callback
+db.save((err) => { if (err) {console.error(err)} })
 ```
 
 ### Inserting documents
@@ -74,7 +74,7 @@ db.save((err) => {
 A document is of type `Object`.
 
 ```javascript
-var doc = {foo: 'bar', n: 42, itIs: true, fruits: ['apple', 'orange', 'pear'], pi: {name: 'Pi', val: 3.14}}
+const doc = {foo: 'bar', n: 42, itIs: true, fruits: ['apple', 'orange', 'pear'], pi: {name: 'Pi', val: 3.14}}
 const id = db.insert(doc)
 ```
 
@@ -83,7 +83,7 @@ const id = db.insert(doc)
 You can also bulk-insert an array of documents.
 
 ```javascript
-const ids = db.insert([{ a: 5 }, { a: 42 }])
+const ids = db.insert([{a: 5}, {a: 42}])
 ```
 
 DBil assigns a unique field `_id` to each document. You can provide your own `_id`, but it must be unique for the db.
@@ -97,13 +97,12 @@ const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work. Returns 'undefined'
 
 Use `find` to look for multiple documents matching you query, or `findOne` to
 look for one specific document. You can select documents based on field equality
-or use comparison operators (`$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`).
+or use comparison operators: `$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`.
 Other available operators are `$exists` and `$regex`.
-You can also use logical operators `$and`, `$or`, `$not` and `$where`. See
-below for the syntax.
+You can also use logical operators `$and`, `$or`, `$not` and `$where`.
+See below for the syntax.
 
-You can use standard projections to restrict the fields to appear in the
-results (see below).
+You can use standard projections to restrict the fields to appear in the results (see below).
 
 #### Basic querying
 
@@ -155,7 +154,6 @@ operator:
   should be true or false
 * `$regex`: checks whether a string is matched by the regular expression.
 
-
 ```javascript
 // {field: {$eq: value}} is actually the same as {field: value}
 db.find({planet: {$eq: 'Earth'}})
@@ -172,11 +170,11 @@ db.find({'moons': {$gt: 5}})
 // [{planet: 'Jupiter', ...}, {planet: 'Omicron', ....}]
 
 // When used with strings, lexicographical order is used
-db.find({ planet: { $gt: 'Mercury' } })
+db.find({planet: {$gt: 'Mercury'}})
 // docs contains Omicron
 
 // Using $in. $nin is used in the same way
-db.find({ planet: { $in: ['Earth', 'Jupiter'] } })
+db.find({planet: {$in: ['Earth', 'Jupiter']}})
 // docs contains Earth and Jupiter
 
 // Using $regex with another operator
@@ -213,8 +211,8 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 #### Projections
 
 You can give `find` and `findOne` an optional second argument, `projections`.
-The syntax is the same as MongoDB: `{ a: 1, b: 1 }` to return only the `a`
-and `b` fields, `{ a: 0, b: 0 }` to omit these two fields. You cannot use both
+The syntax is the same as MongoDB: `{a: 1, b: 1}` to return only the `a`
+and `b` fields, `{a: 0, b: 0}` to omit these two fields. You cannot use both
 modes at the time, except for `_id` which is by default always returned and
 which you can choose to omit. You can project on nested documents.
 
@@ -268,7 +266,7 @@ Possible update options are:
 // const numUpdated = db.update(query, update, options = {multi: false})
 
 const update = {
-	$inc   : {field1: 1, field2: -1, ...},
+    $inc   : {field1: 1, field2: -1, ...}, 
     $set   : {field3: 'val1', field4: 'val2', ...},
     $unset : {filed5: true, filed6: true, ...},
 }
