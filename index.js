@@ -149,11 +149,12 @@ function getDb(filePath) {
 			return 0
 		}
 
+		let countUpdated = 0
 		for (const id of ids) {
-			dbUpdate(db[id], update)
+			countUpdated += dbUpdate(db[id], update) ? 1 : 0
 		}
 
-		return ids.length
+		return countUpdated
 	}
 
 	/**

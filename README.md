@@ -194,7 +194,7 @@ You can combine queries using logical operators:
 * `field: {$op: value}`
 
 ```javascript
-db.find({ $or: [{planet: 'Earth'}, {planet: 'Mars'}] })
+db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}]})
 // docs contains Earth and Mars
 
 db.find({$not: {planet: 'Earth'}})
