@@ -89,11 +89,11 @@ function getDb(filePath)
 	 */
 	function insert(doc)
 	{
-		if (Array.isArray(doc)) {
+		if ( Array.isArray(doc) ) {
 			const ids = []
 
 			for (const singleDoc of doc) {
-				ids.push(dbInsert(db, singleDoc))
+				ids.push( dbInsert(db, singleDoc) )
 			}
 
 			return ids
@@ -189,4 +189,3 @@ function getDb(filePath)
 module.exports = {
 	getDb,
 }
-
