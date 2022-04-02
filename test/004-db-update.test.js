@@ -27,6 +27,14 @@ describe('db-projection', () => {
 		})
 	})
 
+	describe('dbUpdate(doc, {$inc: {a: 0}})', () => {
+		dbUpdate(doc, {$inc: {a: 0}})
+
+		it('it does not change `a`', () => {
+			strictEqual(doc.a, 1)
+		})
+	})
+
 	describe('dbUpdate(doc, {$set: {a: 13}})', () => {
 		dbUpdate(doc, {$set: {a: 13}})
 
@@ -75,3 +83,4 @@ describe('db-projection', () => {
 		})
 	})
 })
+

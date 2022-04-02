@@ -7,9 +7,9 @@ const { dbQuery } = require('../lib/db-query')
 
 describe('query tests', () => {
 	const db  = {
-		'foo': {_id: 'foo', a: 42, b: 'b', c: '1'},
+		'foo': {_id: 'foo', a: 42, b: 'b', c: '1', d: 0},
 		'bar': {_id: 'bar', a: 13, b: 'b', c: '2'},
-		'baz': {_id: 'baz',        b: 'b', c: '1'}
+		'baz': {_id: 'baz',        b: 'b', c: '1'},
 	}
 
 	describe('dbQuery(db, query) no match', () => {
@@ -40,6 +40,11 @@ describe('query tests', () => {
 		it('returns 3 matches', () => {
 			const ids = dbQuery(db, {b: 'b'})
 			strictEqual(ids.length, 3)
+		})
+
+		it('matches {field: 0}', () => {
+			const ids = dbQuery(db, {d: 0})
+			strictEqual(ids[0], 'foo')
 		})
 	})
 
