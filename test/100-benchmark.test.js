@@ -54,7 +54,7 @@ describe('benchmark', () => {
 		let count = 0
 
 		for (let i = 0; i < countObjects; i++) {
-			count += db.update({index: i, b: {$gte: 42}}, {$set: {index: 13}}, {multi: false})
+			count += db.update({index: i, b: {$gte: 42}}, {$set: {b: 13}}, {multi: false})
 		}
 
 		const timeEnd = Date.now() - timeStart
