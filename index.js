@@ -164,12 +164,12 @@ function getDb(filePath)
 	 *
 	 * @param {function(err?: Error)} [callback]
 	 */
-	function save(callback = save_redy)
+	function save(callback = save_ready)
 	{
 		saveDb(db, filePath, callback)
 	}
 
-	function save_redy(err)
+	function save_ready(err)
 	{
 		if (err)
 			console.error('Error with DB save: ' + err)

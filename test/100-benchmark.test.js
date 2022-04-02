@@ -5,7 +5,7 @@ const {describe, it} = require('@popovmp/mocha-tiny')
 const {getDb       } = require('../index.js')
 
 describe('benchmark', () => {
-	const db = getDb() // Make an in-memmory DB
+	const db = getDb() // Make an in-memory DB
 	const countObjects = 1000
 
 	describe('insert', () => {
