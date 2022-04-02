@@ -1,11 +1,11 @@
 'use strict'
 
-const {strictEqual} = require('assert')
+const {strictEqual } = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-const {getDb} = require('../index.js')
+const {getDb       } = require('../index.js')
 
 describe('benchmark', () => {
-	const db = getDb()
+	const db = getDb() // Make an in-memmory DB
 	const countObjects = 1000
 
 	describe('insert', () => {
@@ -14,11 +14,10 @@ describe('benchmark', () => {
 
 		for (let i = 0; i < countObjects; i++) {
 			const doc = {index: i, b: 42}
-			const id = db.insert(doc)
+			const id  = db.insert(doc)
 
-			if (id) {
+			if (id)
 				count++
-			}
 		}
 
 		const timeEnd = Date.now() - timeStart
@@ -37,9 +36,8 @@ describe('benchmark', () => {
 		for (let i = 0; i < countObjects; i++) {
 			const doc = db.findOne({index: i, b: {$gte: 42}}, {index: true})
 
-			if (doc['index'] === i) {
+			if (doc.index === i)
 				count++
-			}
 		}
 
 		const timeEnd = Date.now() - timeStart
@@ -56,7 +54,7 @@ describe('benchmark', () => {
 		let count = 0
 
 		for (let i = 0; i < countObjects; i++) {
-			count += db.update({index: i, b: {$gte: 42}}, {index: 42}, {multi: false})
+			count += db.update({index: i, b: {$gte: 42}}, {$set: {index: 13}}, {multi: false})
 		}
 
 		const timeEnd = Date.now() - timeStart
@@ -68,3 +66,4 @@ describe('benchmark', () => {
 		})
 	})
 })
+

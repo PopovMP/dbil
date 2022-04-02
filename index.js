@@ -20,7 +20,8 @@ const { dbUpdate       } = require('./lib/db-update')
  *  @param {string} [filePath]
  */
 
-function getDb(filePath) {
+function getDb(filePath)
+{
 	const db = loadDb(filePath)
 
 	/**
@@ -31,7 +32,8 @@ function getDb(filePath) {
 	 * @return {number}
 	 * @private
 	 */
-	function count(query) {
+	function count(query)
+	{
 		return dbQuery(db, query).length
 	}
 
@@ -44,7 +46,8 @@ function getDb(filePath) {
 	 * @return {Object[]}
 	 * @private
 	 */
-	function find(query, projection = {}) {
+	function find(query, projection = {})
+	{
 		const ids = dbQuery(db, query)
 		const res = []
 
@@ -64,7 +67,8 @@ function getDb(filePath) {
 	 * @return {Object | undefined}
 	 * @private
 	 */
-	function findOne(query, projection = {}) {
+	function findOne(query, projection = {})
+	{
 		const ids = dbQuery(db, query)
 
 		return ids.length === 1
@@ -83,7 +87,8 @@ function getDb(filePath) {
 	 * @return {string | string[] | undefined}
 	 * @private
 	 */
-	function insert(doc) {
+	function insert(doc)
+	{
 		if (Array.isArray(doc)) {
 			const ids = []
 
@@ -93,9 +98,8 @@ function getDb(filePath) {
 
 			return ids
 		}
-		else {
-			return dbInsert(db, doc)
-		}
+
+		return dbInsert(db, doc)
 	}
 
 	/**
@@ -108,17 +112,16 @@ function getDb(filePath) {
 	 * @return {number} Count of removed documents
 	 * @private
 	 */
-	function remove(query, options) {
+	function remove(query, options)
+	{
 		const ids = dbQuery(db, query)
 
-		if (ids.length === 0) {
+		if (ids.length === 0)
 			return 0
-		}
 
-		if (ids.length > 1 && !options.multi) {
-			// Possibly unwanted remove of multiple docs
+		// check for a possibly unwanted remove of multiple docs
+		if (ids.length > 1 && !options.multi)
 			return 0
-		}
 
 		for (const id of ids) {
 			delete db[id]
@@ -137,17 +140,16 @@ function getDb(filePath) {
 	 *
 	 * @return {number} Count of updated documents
 	 */
-	function update(query, update, options = {}) {
+	function update(query, update, options = {})
+	{
 		const ids = dbQuery(db, query)
 
-		if (ids.length === 0) {
+		if (ids.length === 0)
 			return 0
-		}
 
-		if (ids.length > 1 && !options.multi) {
-			// Possibly unwanted update of multiple docs
+		// Check of possibly unwanted update of multiple docs
+		if (ids.length > 1 && !options.multi)
 			return 0
-		}
 
 		let countUpdated = 0
 		for (const id of ids) {
@@ -162,16 +164,15 @@ function getDb(filePath) {
 	 *
 	 * @param {function(err?: Error)} [callback]
 	 */
-	function save(callback) {
-		if (typeof callback === 'undefined') {
-			callback = (err) => {
-				if (err) {
-					console.error('Error with DB save: ' + err)
-				}
-			}
-		}
-
+	function save(callback = save_redy)
+	{
 		saveDb(db, filePath, callback)
+	}
+
+	function save_redy(err)
+	{
+		if (err)
+			console.error('Error with DB save: ' + err)
 	}
 
 	return {
@@ -188,3 +189,4 @@ function getDb(filePath) {
 module.exports = {
 	getDb,
 }
+
