@@ -6,10 +6,10 @@ const {describe, it} = require('@popovmp/mocha-tiny')
 const {getDb} = require('../index.js')
 const db  = getDb()
 
-db.insert({planet: 'Mars',    system: 'solar',    inhabited: false})
-db.insert({planet: 'Earth',   system: 'solar',    inhabited: true })
-db.insert({planet: 'Jupiter', system: 'solar',    inhabited: false})
-db.insert({planet: 'Omicron', system: 'futurama', inhabited: true })
+db.insert({planet: 'Mars',    system: 'solar',  inhabited: false})
+db.insert({planet: 'Earth',   system: 'solar',  inhabited: true })
+db.insert({planet: 'Jupiter', system: 'solar',  inhabited: false})
+db.insert({planet: 'Omicron', system: 'micron', inhabited: true })
 
 describe('find tests', () => {
 
@@ -36,27 +36,12 @@ describe('find tests', () => {
 			strictEqual(docs.length, 1)
 		})
 	})
-})
 
-describe('findOne', () => {
-	describe('findOne({system: "futurama"})', () => {
-		const doc = db.findOne({system: 'futurama'})
+	describe('db.find({planet: "Pluto"})', () => {
+		const docs = db.find({planet: 'Pluto'})
 
-		it('returns 1 document', () => {
-			strictEqual(typeof doc, 'object')
-		})
-
-		it('doc has the correct property', () => {
-			strictEqual(doc['planet'], 'Omicron')
-			strictEqual(doc['system'], 'futurama')
-		})
-	})
-
-	describe('findOne({system: "solar"})', () => {
-		const doc = db.findOne({system: 'solar'})
-
-		it('no documents found', () => {
-			strictEqual(doc, undefined)
+		it('returns 0 documents', () => {
+			strictEqual(docs.length, 0)
 		})
 	})
 })

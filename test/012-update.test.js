@@ -18,8 +18,8 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const doc = db.findOne({'_id': docId}, {})
-			strictEqual(doc['a'], 13)
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['a'], 13)
 		})
 	})
 
@@ -30,8 +30,8 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const doc = db.findOne({'_id': docId}, {})
-			strictEqual(doc['b'], 'foo')
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['b'], 'foo')
 		})
 	})
 
@@ -42,10 +42,10 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const found = db.findOne({'_id': docId}, {})
-			strictEqual(found['c'], 1)
-			strictEqual(found['d'], 2)
-			strictEqual(found['e'], 3)
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['c'], 1)
+			strictEqual(found[0]['d'], 2)
+			strictEqual(found[0]['e'], 3)
 		})
 	})
 
@@ -56,8 +56,8 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const doc = db.findOne({'_id': docId}, {})
-			strictEqual(doc['a'], 14)
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['a'], 14)
 		})
 	})
 
@@ -68,8 +68,8 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const doc = db.findOne({'_id': docId}, {})
-			strictEqual(doc['a'], 13)
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['a'], 13)
 		})
 	})
 
@@ -80,13 +80,13 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const doc = db.findOne({'_id': docId}, {})
-			strictEqual(doc['b'], undefined)
+			const found = db.find({'_id': docId}, {})
+			strictEqual(found[0]['b'], undefined)
 		})
 	})
 
 	describe('update `_id`', () => {
-		const doc = db.findOne({a: 13})
+		const found1 = db.find({a: 13})
 
 		it('returns 0 updated', () => {
 			const cntUpdated = db.update({a: 13}, {$set: {_id: 0}})
@@ -94,8 +94,8 @@ describe('update tests - {multi: false}', () => {
 		})
 
 		it('doc has the correct id', () => {
-			const doc2 = db.findOne({a: 13})
-			strictEqual(doc2['_id'], doc['_id'])
+			const found2 = db.find({a: 13})
+			strictEqual(found2[0]['_id'], found1[0]['_id'])
 		})
 	})
 })
@@ -126,4 +126,3 @@ describe('update options', () => {
 		})
 	})
 })
-

@@ -19,28 +19,28 @@ describe('insert tests', () => {
 		})
 
 		it('doc has the correct property', () => {
-			const found = db.findOne(doc, {})
-			strictEqual(found['a'], 42)
+			const found = db.find(doc, {})
+			strictEqual(found[0]['a'], 42)
 		})
 
 		it('doc has _id of type string', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( typeof found['_id'] , 'string')
+			const found = db.find(doc, {})
+			strictEqual( typeof found[0]['_id'] , 'string')
 		})
 
 		it('doc has _id of length 16', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( found['_id'].length , 16)
+			const found = db.find(doc, {})
+			strictEqual( found[0]['_id'].length , 16)
 		})
 
 		it('returns the doc _id', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( insertId, found['_id'])
+			const found = db.find(doc, {})
+			strictEqual( insertId, found[0]['_id'])
 		})
 
 		it('doc has 2 properties', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( Object.keys(found).length ,2)
+			const found = db.find(doc, {})
+			strictEqual( Object.keys(found[0]).length ,2)
 		})
 
 		it('inserted doc is a copy', () => {
@@ -63,8 +63,8 @@ describe('insert tests', () => {
 		})
 
 		it('doc has the correct _id', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( found['_id'] , 'foo')
+			const found = db.find(doc, {})
+			strictEqual( found[0]['_id'] , 'foo')
 		})
 
 		it('returns the doc _id', () => {
@@ -72,13 +72,13 @@ describe('insert tests', () => {
 		})
 
 		it('doc has 2 properties', () => {
-			const found = db.findOne(doc, {})
-			strictEqual( Object.keys(found).length ,2)
+			const found = db.find(doc, {})
+			strictEqual( Object.keys(found[0]).length ,2)
 		})
 
 		it('doc has the correct property', () => {
-			const found = db.findOne(doc, {})
-			strictEqual(found['a'], 42)
+			const found = db.find(doc, {})
+			strictEqual(found[0]['a'], 42)
 		})
 	})
 

@@ -95,9 +95,9 @@ const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work. Returns 'undefined'
 
 ### Finding documents
 
-Use `find` to look for multiple documents matching you query, or `findOne` to
-look for one specific document. You can select documents based on field equality
-or use comparison operators: `$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`.
+Use `find` to look for one or multiple documents matching you query.
+You can select documents based on field equality or use comparison operators:
+`$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`.
 Other available operators are `$exists` and `$regex`.
 You can also use logical operators `$and`, `$or`, `$not` and `$where`.
 See below for the syntax.
@@ -129,15 +129,6 @@ const docs = db.find({system: 'solar'})
 // All fileds values must match.
 const docs = db.find({system: 'solar', inhabited: true})
 // [{planet: 'Earth', ...}]
-
-// The same rules apply when you want to only find one document
-const doc = db.findOne({system: 'futurama'})
-// {planet: 'Omicron', ...}
-// If no document is found, doc is undefined
-
-// If `findOne` maches multiple documents, it returns `undefined`
-const doc = db.findOne({system: 'solar'})
-// returns `undefined` for safety reasons
 ```
 
 #### Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex
@@ -198,7 +189,7 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}]})
 // docs contains Earth and Mars
 
 db.find({$not: {planet: 'Earth'}})
-// docs contains Mars, Jupiter, Omicron Persei 8
+// docs contains Mars, Jupiter, Omicron
 
 db.find({$where: doc => doc.planet.length > 6})
 // docs with planet name longer than 6 chars
@@ -210,7 +201,7 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 
 #### Projections
 
-You can give `find` and `findOne` an optional second argument, `projections`.
+You can give `find` an optional second argument, `projections`.
 The syntax is the same as MongoDB: `{a: 1, b: 1}` to return only the `a`
 and `b` fields, `{a: 0, b: 0}` to omit these two fields. You cannot use both
 modes at the time, except for `_id` which is by default always returned and
@@ -251,7 +242,7 @@ db.count({})
 `db.update(query, update, options)` will update all documents
 matching `query` according to the `update` rules:
 
-* `query` is the same kind of finding query you use with `find` and `findOne`
+* `query` is the same kind of finding query you use with `find`
 * `update` specifies how the documents should be modified. It is a set of modifiers for the current fields or new fields.
 * `options` is an object with one possible parameter:
     * `multi` (defaults to `false`) which allows the modification of several documents if set to `true`.

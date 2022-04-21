@@ -34,9 +34,9 @@ describe('benchmark', () => {
 		let count = 0
 
 		for (let i = 0; i < countObjects; i++) {
-			const doc = db.findOne({index: i, b: {$gte: 42}}, {index: true})
+			const found = db.find({index: i, b: {$gte: 42}}, {index: true})
 
-			if (doc.index === i)
+			if (found[0].index === i)
 				count++
 		}
 

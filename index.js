@@ -59,24 +59,6 @@ function getDb(filePath)
 	}
 
 	/**
-	 * Finds a doc in DB. Returns the doc or `undefined`.
-	 *
-	 * @param {Object} query
-	 * @param {Object} [projection]
-	 *
-	 * @return {Object | undefined}
-	 * @private
-	 */
-	function findOne(query, projection = {})
-	{
-		const ids = dbQuery(db, query)
-
-		return ids.length === 1
-			? dbProjection(db[ids[0]], projection)
-			: undefined
-	}
-
-	/**
 	 * Inserts a new document to DB.
 	 * Returns the ID of the inserted document.
 	 * Returns an array of the inserted IDs in case of multiple documents.
@@ -178,7 +160,6 @@ function getDb(filePath)
 	return {
 		count,
 		find,
-		findOne,
 		insert,
 		remove,
 		update,
