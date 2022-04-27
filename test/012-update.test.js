@@ -108,6 +108,12 @@ describe('update', () => {
 			strictEqual(docs[0].a, 42)
 		})
 
+		it('when $unset a non-existing field, it returns 0', () => {
+			resetDB({_id: 1, a: 42})
+			const cntUpdated = db.update({a: 42}, {$unset: {b: 1}})
+			strictEqual(cntUpdated, 0)
+		})
+
 		it('when applies multiple operations, the doc is updated properly', () => {
 			resetDB({_id: 1, a: 13, b: 42, f: 'foo'})
 			const update = {
@@ -165,6 +171,7 @@ describe('update', () => {
 			const cntUpdated = db.update({a: 1}, {a: 13})
 			strictEqual(cntUpdated, 0)
 		})
+
 		it('when there are no operators, the filed is not changed', () => {
 			resetDB([{a: 1}])
 			db.update({a: 1}, {a: 13})
