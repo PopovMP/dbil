@@ -161,6 +161,19 @@ describe('update', () => {
 	})
 
 	describe('non-existing fields', () => {
+		it('when $inc a non-existing field, it returns 1', () => {
+			resetDB({_id: 1})
+			const cntUpdated = db.update({_id: 1}, {$inc: {a: 1}})
+			strictEqual(cntUpdated, 1)
+		})
+
+		it('when $inc a non-existing field, it assumes the filed was equal to 0', () => {
+			resetDB({_id: 1})
+			db.update({_id: 1}, {$inc: {a: 1}})
+			const docs = db.find({})
+			strictEqual(docs[0]['a'], 1)
+		})
+
 		it('when $set a non-existing field, it returns 1', () => {
 			resetDB({_id: 1, a: 42})
 			const cntUpdated = db.update({a: 42}, {$set: {b: 'foo'}})
