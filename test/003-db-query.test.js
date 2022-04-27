@@ -8,7 +8,7 @@ const { dbQuery } = require('../lib/db-query')
 describe('query tests', () => {
 	const db  = {
 		'foo': {_id: 'foo', a: 42, b: 'b', c: '1', d: 0},
-		'bar': {_id: 'bar', a: 13, b: 'b', c: '2'},
+		'bar': {_id: 'bar', a: 13, b: 'b', c: '2', s: [1]},
 		'baz': {_id: 'baz',        b: 'b', c: '1'},
 	}
 
@@ -129,6 +129,28 @@ describe('query tests', () => {
 		it('returns 2 matches', () => {
 			const ids = dbQuery(db, {$where: (doc) => doc.hasOwnProperty('a')})
 			strictEqual(ids.length, 2)
+		})
+	})
+
+	describe('dbQuery(db, {$type: "type")', () => {
+		it('matches type number', () => {
+			const ids = dbQuery(db, {a: {$type: 'number'}})
+			strictEqual(ids.length, 2)
+		})
+
+		it('matches type string', () => {
+			const ids = dbQuery(db, {b: {$type: 'string'}})
+			strictEqual(ids.length, 3)
+		})
+
+		it('matches type undefined', () => {
+			const ids = dbQuery(db, {a: {$type: 'undefined'}})
+			strictEqual(ids.length, 1)
+		})
+
+		it('matches type array', () => {
+			const ids = dbQuery(db, {s: {$type: 'array'}})
+			strictEqual(ids.length, 1)
 		})
 	})
 

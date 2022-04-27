@@ -29,7 +29,7 @@ It is a subset of MongoDB's API (the most used operations).
 * [Inserting documents](#inserting-documents)
 * [Finding documents](#finding-documents)
     * [Basic Querying](#basic-querying)
-    * [Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex](#operators-eq-ne-lt-lte-gt-gte-in-nin-exists-regex)
+    * [Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex, $type](#operators-eq-ne-lt-lte-gt-gte-in-nin-exists-regex-type)
     * [Logical operators: $and, $or, $not, $where](#logical-operators-and-or-not-where)
     * [Projections](#projections)
 * [Counting documents](#counting-documents)
@@ -90,7 +90,7 @@ DBil assigns a unique field `_id` to each document. You can provide your own `_i
 
 ```javascript
 const id1 = db.insert({a: 1, _id: 'foo'}) // Works. Returns 'foo'
-const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work. Returns 'undefined'
+const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work because the _id already exists. Returns 'undefined'
 ```
 
 ### Finding documents
@@ -131,7 +131,7 @@ const docs = db.find({system: 'solar', inhabited: true})
 // [{planet: 'Earth', ...}]
 ```
 
-#### Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex
+#### Operators: $eq, $ne, $lt, $lte, $gt, $gte, $in, $nin, $exists, $regex, $type
 
 The syntax is `{field1: {$op: value1}, field2: {$op: value}}` where `$op` is any comparison
 operator:
@@ -144,6 +144,7 @@ operator:
 * `$exists`: checks whether the document posses the property `field`. `value`
   should be true or false
 * `$regex`: checks whether a string is matched by the regular expression.
+* `$type`: checks for a field type. It accepts all JS types + `'array'`
 
 ```javascript
 // {field: {$eq: value}} is actually the same as {field: value}
@@ -254,9 +255,10 @@ Possible update options are:
 // const numUpdated = db.update(query, update, options = {multi: false})
 
 const update = {
-    $inc   : {field1: 1, field2: -1, ...}, 
-    $set   : {field3: 'val1', field4: 'val2', ...},
-    $unset : {filed5: true, filed6: true, ...},
+    $inc   : {a: 1, b: -1, ...},       // Increments `a`, `b`, ...
+    $set   : {a: 'foo', b: 42, ...},   // Sets or creates fileds `a`, `b`, ... 
+    $unset : {a: true, b: false, ...}, // Deletes filed `a`
+    $rename: {a: 'b'},                 // Renames filed `a` to `b`
 }
 
 const numUpdated = db.update({}, update)
