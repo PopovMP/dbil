@@ -20,16 +20,16 @@ describe('benchmark', () => {
 				count++
 		}
 
-		const timeEnd = Date.now() - timeStart
+		const time = Date.now() - timeStart
 
 		it('insert ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / timeEnd) * countObjects)
-			console.log(`Inserted ${count} docs for ${timeEnd}ms. Ops/sec: ${opsPerSec}`)
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Inserted ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
 
-	describe('findOne', () => {
+	describe('find', () => {
 		const timeStart = Date.now()
 		let count = 0
 
@@ -40,11 +40,11 @@ describe('benchmark', () => {
 				count++
 		}
 
-		const timeEnd = Date.now() - timeStart
+		const time = Date.now() - timeStart
 
-		it('findOne ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / timeEnd) * countObjects)
-			console.log(`Found ${count} docs for ${timeEnd}ms. Ops/sec: ${opsPerSec}`)
+		it('find ops/sec > 5000', () => {
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
@@ -57,11 +57,11 @@ describe('benchmark', () => {
 			count += db.update({index: i, b: {$gte: 42}}, {$set: {b: 13}}, {multi: false})
 		}
 
-		const timeEnd = Date.now() - timeStart
+		const time = Date.now() - timeStart
 
 		it('update ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / timeEnd) * countObjects)
-			console.log(`Updated ${count} docs for ${timeEnd}ms. Ops/sec: ${opsPerSec}`)
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Updated ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
