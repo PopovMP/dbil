@@ -65,5 +65,25 @@ describe('benchmark', () => {
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
+
+	describe('find by index', () => {
+		const timeStart = Date.now()
+		let count = 0
+
+		const ids = db.find({}, {_id: 1}).map(doc => doc._id)
+
+		for (const id of ids) {
+			db.find({_id: id}, {index: true})
+			count++
+		}
+
+		const time = Date.now() - timeStart
+
+		it('find ops/sec > 5000', () => {
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			strictEqual(opsPerSec > 5000, true)
+		})
+	})
 })
 
