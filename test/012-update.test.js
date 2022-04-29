@@ -15,110 +15,110 @@ function resetDB(docs) {
 describe('update', () => {
 	describe('single match', () => {
 		it('when $set one field, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$set: {a: 13}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $set one field, the field is updated', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$set: {a: 13}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 13)
 		})
 
 		it('when $set 3 fields, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$set: {c: 1, d: 2, e: 3}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $set 3 fields, the fields are updated', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$set: {c: 1, d: 2, e: 3}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].c, 1)
 			strictEqual(docs[0].d, 2)
 			strictEqual(docs[0].e, 3)
 		})
 
 		it('when $inc a field, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$inc: {a: 1}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $inc a field, the field is incremented', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$inc: {a: 1}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 43)
 		})
 
 		it('when $inc a field with delta = 3, the field is incremented by 3', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$inc: {a: 3}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 45)
 		})
 
 		it('when $inc a field with delta = -1, the field is decremented', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$inc: {a: -1}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 41)
 		})
 
 		it('when $rename one field, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$rename: {a: 'b'}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $rename one field, the field is renamed', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$rename: {a: 'b'}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, undefined)
 			strictEqual(docs[0].b, 42)
 		})
 
 		it('when $unset one field, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$unset: {a: true}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $unset one field, the field is deleted', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$unset: {a: true}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, undefined)
 		})
 
 		it('when $unset with a falsy value, it returns 0', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$unset: {a: 0}})
 			strictEqual(cntUpdated, 0)
 		})
 
 		it('when $unset with a falsy value, the field is not deleted', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$unset: {a: false}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 42)
 		})
 
 		it('when applies multiple operations, the doc is updated properly', () => {
-			resetDB({_id: 1, a: 13, b: 42, f: 'foo'})
+			resetDB({_id: 'id', a: 13, b: 42, f: 'foo'})
 			const update = {
 				$set  : {a: 42, c: 64},
 				$inc  : {b: 3},
 				$unset: {f: true},
 				$dummy: {d: 128}
 			}
-			db.update({_id: 1}, update)
-			const docs = db.find({_id: 1})
+			db.update({_id: 'id'}, update)
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].a, 42)
 			strictEqual(docs[0].b, 45)
 			strictEqual(docs[0].c, 64)
@@ -162,39 +162,39 @@ describe('update', () => {
 
 	describe('non-existing fields', () => {
 		it('when $inc a non-existing field, it returns 1', () => {
-			resetDB({_id: 1})
-			const cntUpdated = db.update({_id: 1}, {$inc: {a: 1}})
+			resetDB({_id: 'id'})
+			const cntUpdated = db.update({_id: 'id'}, {$inc: {a: 1}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $inc a non-existing field, it assumes the filed was equal to 0', () => {
-			resetDB({_id: 1})
-			db.update({_id: 1}, {$inc: {a: 1}})
+			resetDB({_id: 'id'})
+			db.update({_id: 'id'}, {$inc: {a: 1}})
 			const docs = db.find({})
 			strictEqual(docs[0]['a'], 1)
 		})
 
 		it('when $set a non-existing field, it returns 1', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$set: {b: 'foo'}})
 			strictEqual(cntUpdated, 1)
 		})
 
 		it('when $set a non-existing field, it adds the new field', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$set: {b: 'foo'}})
-			const docs = db.find({_id: 1})
+			const docs = db.find({_id: 'id'})
 			strictEqual(docs[0].b, 'foo')
 		})
 
 		it('when $rename a non-existing field, it returns 0', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$rename: {b: 'c'}})
 			strictEqual(cntUpdated, 0)
 		})
 
 		it('when $unset a non-existing field, it returns 0', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$unset: {b: 1}})
 			strictEqual(cntUpdated, 0)
 		})
@@ -228,39 +228,39 @@ describe('update', () => {
 
 		// Cannot $inc non-numeric field
 		it('when $inc a non-numeric field, it returns 0', () => {
-			resetDB({_id: 1, a: 'foo'})
+			resetDB({_id: 'id', a: 'foo'})
 			const cntUpdated = db.update({a: 'foo'}, {$inc: {a: 1}})
 			strictEqual(cntUpdated, 0)
 		})
 
 		// Cannot $set _id
 		it('when $set _id, it returns 0', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$set: {_id: 'foo'}})
 			strictEqual(cntUpdated, 0)
 		})
 
 		// Cannot $set _id
 		it('when $set _id, the document is not updated', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$set: {_id: 'foo'}})
-			const docs = db.find({_id: 1})
-			strictEqual(docs[0]._id, 1)
+			const docs = db.find({_id: 'id'})
+			strictEqual(docs[0]._id, 'id')
 		})
 
 		// Cannot $unset _id
 		it('when $unset _id, it returns 0', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$unset: {_id: 'foo'}})
 			strictEqual(cntUpdated, 0)
 		})
 
 		// Cannot $unset _id
 		it('when $unset _id, the document is not updated', () => {
-			resetDB({_id: 1, a: 42})
+			resetDB({_id: 'id', a: 42})
 			db.update({a: 42}, {$unset: {_id: 'foo'}})
-			const docs = db.find({_id: 1})
-			strictEqual(docs[0]._id, 1)
+			const docs = db.find({_id: 'id'})
+			strictEqual(docs[0]._id, 'id')
 		})
 	})
 })

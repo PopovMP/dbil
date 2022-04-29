@@ -64,16 +64,16 @@ describe('insert tests', () => {
 
 		it('doc has the correct _id', () => {
 			const found = db.find(doc, {})
-			strictEqual( found[0]['_id'] , 'foo')
+			strictEqual(found[0]['_id'] , 'foo')
 		})
 
 		it('returns the doc _id', () => {
-			strictEqual( insertId, 'foo')
+			strictEqual(insertId, 'foo')
 		})
 
 		it('doc has 2 properties', () => {
 			const found = db.find(doc, {})
-			strictEqual( Object.keys(found[0]).length ,2)
+			strictEqual(Object.keys(found[0]).length ,2)
 		})
 
 		it('doc has the correct property', () => {
