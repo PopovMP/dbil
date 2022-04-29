@@ -6,6 +6,9 @@
   "author": "Popov MP <info@forexsb.com>",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/dbil",
+  "dependencies": {
+    "@popovmp/micro-logger": "^1.7.0"
+  },
   "devDependencies": {
     "@popovmp/mocha-tiny": "^2.1.0"
   },

@@ -5,6 +5,7 @@ const { dbQuery        } = require('./lib/db-query')
 const { dbProjection   } = require('./lib/db-projection')
 const { dbInsert       } = require('./lib/db-insert')
 const { dbUpdate       } = require('./lib/db-update')
+const {logError}         = require('@popovmp/micro-logger')
 
 /**
  * @typedef {Object} RemoveOptions
@@ -154,7 +155,7 @@ function getDb(filePath)
 	function save_ready(err)
 	{
 		if (err)
-			console.error('Error with DB save: ' + err)
+			logError(`Error with DB save: ${err}`, 'save')
 	}
 
 	return {

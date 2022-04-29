@@ -6,7 +6,7 @@ Goals:
  - **simple** - syntax similar to MongoDB / NeDB.
  - **synchronous** - all queries are synchronous. Only DB save accepts an optional callback.
  - **fast** - DBil has a simple API with only the most needed instructions. 
- - **clean** - no dependencies, no promises (of any kind)...
+ - **clean** - no third party dependencies, no promises (of any kind)...
 
 ## Installation, tests
 
