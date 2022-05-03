@@ -1,9 +1,10 @@
 ## DBil
 
-DBil is heavily inspired by [nedb](https://github.com/louischatriot/nedb).
+DBil is a simple Document DB library
 
 Goals:
  - **simple** - syntax similar to MongoDB / NeDB.
+ - **embedded** - it can be embedded directly in a host application and store DBs in local files.
  - **synchronous** - all queries are synchronous. Only DB save accepts an optional callback.
  - **fast** - DBil has a simple API with only the most needed instructions. 
  - **clean** - no third party dependencies, no promises (of any kind)...
@@ -76,9 +77,11 @@ A document is of type `Object`.
 ```javascript
 const doc = {foo: 'bar', n: 42, bool: true, fruits: ['apple', 'orange'], pi: {val: 3.14}}
 const id = db.insert(doc)
+dn.save()
 ```
 
-`db.insert(doc)` returns the id of the inserted document.
+`db.insert(doc)` returns the id of the inserted document. `insert` doesn't save the DB automatically.
+You have to save it with `db.save()`. 
 
 You can also bulk-insert an array of documents.
 
@@ -86,7 +89,9 @@ You can also bulk-insert an array of documents.
 const ids = db.insert([{a: 5}, {a: 42}])
 ```
 
-DBil assigns a unique field `_id` to each document. You can provide your own `_id`, but it must be unique for the db.
+DBil assigns a unique field `_id` to each document. It is a string of length 16 characters.
+
+You can provide your own `_id` of type `string`, however, it must be unique for the db.
 
 ```javascript
 const id1 = db.insert({a: 1, _id: 'foo'}) // Works. Returns 'foo'
@@ -250,7 +255,7 @@ matching `query` according to the `update` rules:
 
 Possible update options are:
 
-```js
+```javascript
 // Format
 // const numUpdated = db.update(query, update, options = {multi: false})
 
@@ -262,6 +267,7 @@ const update = {
 }
 
 const numUpdated = db.update({}, update)
+db.save()
 ```
 
 **Note**: you can't change a document's `_id`.
@@ -298,4 +304,13 @@ db.remove({system: 'solar'}, {multi: true})
 
 // Removing all documents with the 'match-all' query
 db.remove({}, {multi: true})
+```
+### Logging
+
+**DBil** logs errors by using `@popovmp/micro-logger` ( https://www.npmjs.com/package/@popovmp/micro-logger ).
+You may include `micro-logger` to your application and specify the output log file:
+
+```javascript
+// In index.js
+require('@popovmp/micro-logger').init('~/logs/my-app.log')
 ```
