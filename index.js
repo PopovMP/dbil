@@ -1,11 +1,11 @@
 'use strict'
 
-const { loadDb, saveDb } = require('./lib/io-helper')
-const { dbQuery        } = require('./lib/db-query')
-const { dbProjection   } = require('./lib/db-projection')
-const { dbInsert       } = require('./lib/db-insert')
-const { dbUpdate       } = require('./lib/db-update')
-const {logError}         = require('@popovmp/micro-logger')
+const {logError}       = require('@popovmp/micro-logger')
+const {loadDb, saveDb} = require('./lib/io-helper')
+const {dbQuery}        = require('./lib/db-query')
+const {dbProjection}   = require('./lib/db-projection')
+const {dbInsert}       = require('./lib/db-insert')
+const {dbUpdate}       = require('./lib/db-update')
 
 /**
  * @typedef {Object} RemoveOptions
