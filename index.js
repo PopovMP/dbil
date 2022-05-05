@@ -79,10 +79,16 @@ function getDb(filePath)
 				ids.push( dbInsert(db, singleDoc) )
 			}
 
+			save()
+
 			return ids
 		}
 
-		return dbInsert(db, doc)
+		const id = dbInsert(db, doc)
+
+		save()
+
+		return id
 	}
 
 	/**
@@ -109,6 +115,8 @@ function getDb(filePath)
 		for (const id of ids) {
 			delete db[id]
 		}
+
+		save()
 
 		return ids.length
 	}
@@ -139,23 +147,23 @@ function getDb(filePath)
 			countUpdated += dbUpdate(db[id], update) ? 1 : 0
 		}
 
+		save()
+
 		return countUpdated
 	}
 
 	/**
 	 * Saves DB to disc.
-	 *
-	 * @param {function(err?: Error)} [callback]
 	 */
-	function save(callback = save_ready)
+	function save()
 	{
-		saveDb(db, filePath, callback)
-	}
+		if (filePath === undefined)
+			return
 
-	function save_ready(err)
-	{
-		if (err)
-			logError(`Error with DB save: ${err}`, 'save')
+		saveDb(db, filePath, (err) => {
+			if (err)
+				logError(`Error with DB save: ${err}`, 'save')
+		})
 	}
 
 	return {
@@ -164,7 +172,6 @@ function getDb(filePath)
 		insert,
 		remove,
 		update,
-		save,
 	}
 }
 

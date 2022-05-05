@@ -44,15 +44,15 @@ You can use DBil as an in-memory only CB or as a persistent DB.
 Create in-memory only DB:
 
 ```javascript
-const {getDB} = require('@popovmp/dbil')
-const db = getDB()
+const {getDb} = require('@popovmp/dbil')
+const db = getDb()
 ```
 
 Load a DB from file
 
 ```javascript
-const {getDB} = require('@popovmp/dbil')
-const db = getDB('path/to/db.file')
+const {getDb} = require('@popovmp/dbil')
+const db = getDb('path/to/db.file')
 ```
 
 * `filename` (optional): path to the file where the data is persisted. If left
@@ -60,15 +60,7 @@ const db = getDB('path/to/db.file')
 
 ### Persistence
 
-DBil allows you to make as many queries as you need in-memory. However, you need to explicitly save the DB when you finish.
-
-```javascript
-// queries, queries,...
-db.save() // Fire and forget.
-
-// db.save accepts an optional callback
-db.save((err) => { if (err) {console.error(err)} })
-```
+DBil saves the DB on a `json` file after successful `insert`, `update`, or `remove` operation.
 
 ### Inserting documents
 
@@ -77,7 +69,6 @@ A document is of type `Object`.
 ```javascript
 const doc = {foo: 'bar', n: 42, bool: true, fruits: ['apple', 'orange'], pi: {val: 3.14}}
 const id = db.insert(doc)
-dn.save()
 ```
 
 `db.insert(doc)` returns the id of the inserted document. `insert` doesn't save the DB automatically.
@@ -267,7 +258,6 @@ const update = {
 }
 
 const numUpdated = db.update({}, update)
-db.save()
 ```
 
 **Note**: you can't change a document's `_id`.
