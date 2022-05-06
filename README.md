@@ -1,11 +1,11 @@
 ## DBil
 
-DBil is a simple Document DB library
+DBil is a simple, synchronous, local files Document DB.
 
 Goals:
  - **simple** - syntax similar to MongoDB / NeDB.
  - **embedded** - it can be embedded directly in a host application and store DBs in local files.
- - **synchronous** - all queries are synchronous. Only DB save accepts an optional callback.
+ - **synchronous** - all queries are synchronous.
  - **fast** - DBil has a simple API with only the most needed instructions. 
  - **clean** - no third party dependencies, no promises (of any kind)...
 
@@ -71,8 +71,7 @@ const doc = {foo: 'bar', n: 42, bool: true, fruits: ['apple', 'orange'], pi: {va
 const id = db.insert(doc)
 ```
 
-`db.insert(doc)` returns the id of the inserted document. `insert` doesn't save the DB automatically.
-You have to save it with `db.save()`. 
+`db.insert(doc)` returns the id of the inserted document.
 
 You can also bulk-insert an array of documents.
 
