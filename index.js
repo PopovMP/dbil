@@ -23,7 +23,11 @@ const {dbUpdate}       = require('./lib/db-update')
 
 function getDb(filePath)
 {
-	const db = loadDb(filePath)
+	const inMemory = typeof filePath !== 'string' || filePath === ''
+
+	const db = inMemory
+		? {}
+		: loadDb(filePath)
 
 	/**
 	 * Counts docs in DB.
@@ -157,7 +161,7 @@ function getDb(filePath)
 	 */
 	function save()
 	{
-		if (filePath === undefined)
+		if (inMemory)
 			return
 
 		saveDb(db, filePath, (err) => {
