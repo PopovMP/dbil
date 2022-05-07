@@ -49,6 +49,26 @@ describe('benchmark', () => {
 		})
 	})
 
+	describe('findOne', () => {
+		const timeStart = Date.now()
+		let count = 0
+
+		for (let i = 0; i < countObjects; i++) {
+			const doc = db.findOne({index: i, b: {$gte: 42}}, {index: true})
+
+			if (doc['index'] === i)
+				count++
+		}
+
+		const time = Date.now() - timeStart
+
+		it('find ops/sec > 5000', () => {
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			strictEqual(opsPerSec > 5000, true)
+		})
+	})
+
 	describe('update', () => {
 		const timeStart = Date.now()
 		let count = 0
