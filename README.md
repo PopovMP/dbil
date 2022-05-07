@@ -90,7 +90,11 @@ const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work because the _id alread
 
 ### Finding documents
 
-Use `find` to look for one or multiple documents matching you query.
+Use `find` or `findOne` to look for one or multiple documents matching you query.
+
+* `find` returns an array of documents. If no matches, it returns an empty array.
+* `findOne` returns the first found document or `undefined`.
+
 You can select documents based on field equality or use comparison operators:
 `$eq`, `$ne`, `$lt`, `$lte`, `$gt`, `$gte`, `$in`, `$nin`.
 Other available operators are `$exists` and `$regex`.

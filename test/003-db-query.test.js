@@ -3,7 +3,7 @@
 const {strictEqual} = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
 
-const { dbQuery } = require('../lib/db-query')
+const {dbQuery, dbQueryOne} = require('../lib/db-query')
 
 describe('query tests', () => {
 	const db  = {
@@ -48,7 +48,7 @@ describe('query tests', () => {
 		})
 	})
 
-	describe('dbQuery(db, query) match multiple properties', () => {
+	describe('dbQuery(db, query) match multiple fields', () => {
 		it('match 2 docs', () => {
 			const ids = dbQuery(db, {b: 'b', c: '1'})
 			strictEqual(ids.length, 2)
@@ -172,6 +172,42 @@ describe('query tests', () => {
 		it('returns 2 matches', () => {
 			const ids = dbQuery(db, {$not: {a: {$exists: true}, c: '2'}})
 			strictEqual(ids.length, 2)
+		})
+	})
+})
+
+describe('queryOne tests', () => {
+	const db = {
+		'foo': {_id: 'foo', a: 42},
+		'bar': {_id: 'bar', a: 13},
+		'baz': {_id: 'baz', a: 13},
+	}
+
+	describe('dbQueryOne no match', () => {
+		it('returns empty string', () => {
+			const id = dbQueryOne(db, {a: 10})
+			strictEqual(id, '')
+		})
+	})
+
+	describe('dbQueryOne multiple matches', () => {
+		it('returns first id', () => {
+			const id = dbQueryOne(db, {a: 13})
+			strictEqual(id, 'bar')
+		})
+	})
+
+	describe('dbQueryOne exact match', () => {
+		it('returns correct id', () => {
+			const id = dbQueryOne(db, {a: 42})
+			strictEqual(id, 'foo')
+		})
+	})
+
+	describe('dbQueryOne match _id', () => {
+		it('returns correct id', () => {
+			const id = dbQueryOne(db, {_id: 'baz'})
+			strictEqual(id, 'baz')
 		})
 	})
 })

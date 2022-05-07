@@ -1,11 +1,11 @@
 'use strict'
 
-const {logError}       = require('@popovmp/micro-logger')
-const {loadDb, saveDb} = require('./lib/io-helper')
-const {dbQuery}        = require('./lib/db-query')
-const {dbProjection}   = require('./lib/db-projection')
-const {dbInsert}       = require('./lib/db-insert')
-const {dbUpdate}       = require('./lib/db-update')
+const {logError}            = require('@popovmp/micro-logger')
+const {loadDb, saveDb}      = require('./lib/io-helper')
+const {dbQuery, dbQueryOne} = require('./lib/db-query')
+const {dbProjection}        = require('./lib/db-projection')
+const {dbInsert}            = require('./lib/db-insert')
+const {dbUpdate}            = require('./lib/db-update')
 
 /**
  * @typedef {Object} RemoveOptions
@@ -35,7 +35,6 @@ function getDb(filePath)
 	 * @param {Object} query
 	 *
 	 * @return {number}
-	 * @private
 	 */
 	function count(query)
 	{
@@ -49,7 +48,6 @@ function getDb(filePath)
 	 * @param {Object} [projection]
 	 *
 	 * @return {Object[]}
-	 * @private
 	 */
 	function find(query, projection = {})
 	{
@@ -64,6 +62,23 @@ function getDb(filePath)
 	}
 
 	/**
+	 * Finds the first match doc in DB. Returns a doc or undefined.
+	 *
+	 * @param {Object} query
+	 * @param {Object} [projection]
+	 *
+	 * @return {Object | undefined}
+	 */
+	function findOne(query, projection = {})
+	{
+		const id = dbQueryOne(db, query)
+
+		return id === ''
+			? undefined
+			: dbProjection(db[id], projection)
+	}
+
+	/**
 	 * Inserts a new document to DB.
 	 * Returns the ID of the inserted document.
 	 * Returns an array of the inserted IDs in case of multiple documents.
@@ -72,7 +87,6 @@ function getDb(filePath)
 	 * @param {Object || Object[]} doc
 	 *
 	 * @return {string | string[] | undefined}
-	 * @private
 	 */
 	function insert(doc)
 	{
@@ -103,7 +117,6 @@ function getDb(filePath)
 	 * @param {RemoveOptions} [options]
 	 *
 	 * @return {number} Count of removed documents
-	 * @private
 	 */
 	function remove(query, options)
 	{
@@ -158,6 +171,7 @@ function getDb(filePath)
 
 	/**
 	 * Saves DB to disc.
+	 * @private
 	 */
 	function save()
 	{
@@ -173,6 +187,7 @@ function getDb(filePath)
 	return {
 		count,
 		find,
+		findOne,
 		insert,
 		remove,
 		update,
