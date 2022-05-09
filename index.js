@@ -8,13 +8,10 @@ const {dbInsert}            = require('./lib/db-insert')
 const {dbUpdate}            = require('./lib/db-update')
 
 /**
- * @typedef {Object} RemoveOptions
- * @property {boolean} multi
- */
-
-/**
- * @typedef {Object} UpdateOptions
- * @property {boolean} multi
+ * @typedef {Object} ModifyOptions
+ *
+ * @property {boolean} [multi]
+ * @property {boolean} [skipSave]
  */
 
 /**
@@ -114,11 +111,11 @@ function getDb(filePath)
 	 * Returns the count of the removed docs
 	 *
 	 * @param {Object} query
-	 * @param {RemoveOptions} [options]
+	 * @param {ModifyOptions} [options]
 	 *
 	 * @return {number} Count of removed documents
 	 */
-	function remove(query, options)
+	function remove(query, options = {})
 	{
 		const ids = dbQuery(db, query)
 
@@ -133,7 +130,8 @@ function getDb(filePath)
 			delete db[id]
 		}
 
-		save()
+		if (!options.skipSave)
+			save()
 
 		return ids.length
 	}
@@ -144,11 +142,11 @@ function getDb(filePath)
 	 *
 	 * @param {Object} query
 	 * @param {Object} update
-	 * @param {UpdateOptions} [options]
+	 * @param {ModifyOptions} [options]
 	 *
 	 * @return {number} Count of updated documents
 	 */
-	function update(query, update, options = {})
+	function update(query, update, options= {})
 	{
 		const ids = dbQuery(db, query)
 
@@ -164,7 +162,8 @@ function getDb(filePath)
 			countUpdated += dbUpdate(db[id], update) ? 1 : 0
 		}
 
-		save()
+		if (!options.skipSave)
+			save()
 
 		return countUpdated
 	}
@@ -191,6 +190,7 @@ function getDb(filePath)
 		insert,
 		remove,
 		update,
+		save,
 	}
 }
 

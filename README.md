@@ -60,7 +60,24 @@ const db = getDb('path/to/db.file')
 
 ### Persistence
 
-DBil saves the DB on a `json` file after successful `insert`, `update`, or `remove` operation.
+DBil saves the DB after successful `insert`, `update`, or `remove` operation if filename is provided in `getDb`.
+
+You can skip saving in the `update` and `remove` commands with an option `{skipSave: true}`.
+You can force saving with `db.save()`
+
+```javascript
+const db = getDb('./counter.json')
+
+db.insert([{key: 'foo'}, {key: 'bar'}, {key: 'bas'}])
+
+// Update and save the DB. Note: $inc creates a missing field.
+db.update({key: 'foo'}, {$inc: {count: 1}})
+
+// Delay the save
+db.update({key: 'foo'}, {$inc: {count: 1}}, {skipSave: true})
+db.update({key: 'bar'}, {$inc: {count: 1}}, {skipSave: true})
+db.save()
+```
 
 ### Inserting documents
 
