@@ -12,21 +12,21 @@ describe('query tests', () => {
 		'baz': {_id: 'baz',        b: 'b', c: '1', f: 'map'},
 	}
 
-	describe('dbQuery(db, query) no match', () => {
+	describe('no match', () => {
 		it('returns []', () => {
 			const ids = dbQuery(db, {a: 999})
 			strictEqual(ids.length, 0)
 		})
 	})
 
-	describe('dbQuery(db, query) all match', () => {
+	describe('match all {}', () => {
 		it('returns all', () => {
 			const ids = dbQuery(db, {})
 			strictEqual(ids.length, 3)
 		})
 	})
 
-	describe('dbQuery(db, query) exact match', () => {
+	describe('match one field', () => {
 		it('returns correct _id', () => {
 			const ids = dbQuery(db, {a: 42})
 			strictEqual(ids[0], 'foo')
@@ -48,7 +48,7 @@ describe('query tests', () => {
 		})
 	})
 
-	describe('dbQuery(db, query) match multiple fields', () => {
+	describe('match multiple fields', () => {
 		it('match 2 docs', () => {
 			const ids = dbQuery(db, {b: 'b', c: '1'})
 			strictEqual(ids.length, 2)
@@ -70,45 +70,63 @@ describe('query tests', () => {
 		})
 	})
 
-	describe('dbQuery(db, {field: {$exists: true}} )', () => {
-		it('returns 2 matches', () => {
+	describe('$exists', () => {
+		it('$exists: true', () => {
 			const ids = dbQuery(db, {a: {$exists: true}})
 			strictEqual(ids.length, 2)
 		})
-	})
 
-	describe('dbQuery(db, {field: {$exists: false}} )', () => {
-		it('returns 1 matches', () => {
+		it('$exists: false', () => {
 			const ids = dbQuery(db, {a: {$exists: false}})
 			strictEqual(ids.length, 1)
 		})
 	})
 
-	describe('dbQuery(db, {field: {$gt: number}} )', () => {
-		it('returns 1 matches', () => {
+	describe('$in', () => {
+		it('$in: [...]', () => {
+			const ids = dbQuery(db, {a: {$in: [13, 14]}})
+			strictEqual(ids.length, 1)
+			strictEqual(ids[0], 'bar')
+		})
+	})
+
+	describe('$includes', () => {
+		it('string field $includes: substr', () => {
+			const ids = dbQuery(db, {f: {$includes: 'ma'}})
+			strictEqual(ids.length, 2)
+		})
+
+		it('array field $includes: elem', () => {
+			const ids = dbQuery(db, {s: {$includes: 1}})
+			strictEqual(ids.length, 1)
+		})
+	})
+
+	describe('$gt', () => {
+		it('1 match', () => {
 			const ids = dbQuery(db, {a: {$gt: 13}})
 			strictEqual(ids.length, 1)
 		})
 
-		it('returns 2 matches', () => {
+		it('2 matches', () => {
 			const ids = dbQuery(db, {a: {$gt: 10}})
 			strictEqual(ids.length, 2)
 		})
 	})
 
-	describe('dbQuery(db, {field: {$gte: number}} )', () => {
-		it('returns 1 matches', () => {
+	describe('$gte', () => {
+		it('1 matches', () => {
 			const ids = dbQuery(db, {a: {$gte: 40}})
 			strictEqual(ids.length, 1)
 		})
 
-		it('returns 2 matches', () => {
+		it('2 matches', () => {
 			const ids = dbQuery(db, {a: {$gte: 13}})
 			strictEqual(ids.length, 2)
 		})
 	})
 
-	describe('dbQuery(db, {field: {$regex: //}} )', () => {
+	describe('$regex', () => {
 		it('matches numbers', () => {
 			const ids = dbQuery(db, {a: {$regex: /\d\d/}})
 			strictEqual(ids.length, 2)
@@ -120,7 +138,7 @@ describe('query tests', () => {
 		})
 	})
 
-	describe('dbQuery(db, {$where: doc => boolean)', () => {
+	describe('$where', () => {
 		it('returns 1 match', () => {
 			const ids = dbQuery(db, {$where: (doc) => doc.a === 42})
 			strictEqual(ids.length, 1)
@@ -132,43 +150,43 @@ describe('query tests', () => {
 		})
 	})
 
-	describe('dbQuery(db, {$type: "type")', () => {
-		it('matches type number', () => {
+	describe('$type', () => {
+		it("$type: 'number'", () => {
 			const ids = dbQuery(db, {a: {$type: 'number'}})
 			strictEqual(ids.length, 2)
 		})
 
-		it('matches type string', () => {
+		it("$type: 'string'", () => {
 			const ids = dbQuery(db, {b: {$type: 'string'}})
 			strictEqual(ids.length, 3)
 		})
 
-		it('matches type undefined', () => {
+		it("$type: 'undefined'", () => {
 			const ids = dbQuery(db, {a: {$type: 'undefined'}})
 			strictEqual(ids.length, 1)
 		})
 
-		it('matches type array', () => {
+		it("$type: 'array'", () => {
 			const ids = dbQuery(db, {s: {$type: 'array'}})
 			strictEqual(ids.length, 1)
 		})
 	})
 
-	describe('dbQuery(db, {$and: [...]})', () => {
+	describe('{$and: [...]}', () => {
 		it('returns 1 match', () => {
 			const ids = dbQuery(db, {$and: [{a: {$gte: 13}}, {a: {$lt: 14}}]})
 			strictEqual(ids.length, 1)
 		})
 	})
 
-	describe('dbQuery(db, {$or: [...]})', () => {
+	describe('{$or: [...]}', () => {
 		it('returns 2 matches', () => {
 			const ids = dbQuery(db, {$or: [{a: {$eq: 13}}, {a: {$eq: 42}}]})
 			strictEqual(ids.length, 2)
 		})
 	})
 
-	describe('dbQuery(db, {$not: {...}})', () => {
+	describe('{$not: {...}}', () => {
 		it('returns 2 matches', () => {
 			const ids = dbQuery(db, {$not: {a: {$exists: true}, c: '2'}})
 			strictEqual(ids.length, 2)

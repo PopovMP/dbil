@@ -156,6 +156,7 @@ operator:
 * `$lt`, `$lte`: less than, less than or equal
 * `$gt`, `$gte`: greater than, greater than or equal
 * `$in`: member of an array of values
+* `$includes`: a `string` or an `array` field includes the value
 * `$nin`: not a member of an array
 * `$exists`: checks whether the document posses the property `field`. `value`
   should be true or false
@@ -185,9 +186,20 @@ db.find({planet: {$gt: 'Mercury'}})
 db.find({planet: {$in: ['Earth', 'Jupiter']}})
 // docs contains Earth and Jupiter
 
-// Using $regex with another operator
+// Using $regex
 db.find({planet: {$regex: /ar/}})
-// docs only contains Mars because Earth was excluded from the match by $nin
+// docs Mars and Earth
+
+// Using $includes with a string field
+db.find({planet: {$includes: 'ar'}})
+// docs Mars and Earth
+
+// $includes an array field.
+// If DB has docs
+// {_id: '1', a: [1, 2]}
+// {_id: '2', a: [2, 3]}
+db.find({a: {$includes: 3}})
+// Matches _id = '2'
 ```
 
 #### Logical operators: $and, $or, $not, $where
@@ -222,7 +234,7 @@ You can give `find` an optional second argument, `projections`.
 The syntax is the same as MongoDB: `{a: 1, b: 1}` to return only the `a`
 and `b` fields, `{a: 0, b: 0}` to omit these two fields. You cannot use both
 modes at the time, except for `_id` which is by default always returned and
-which you can choose to omit. You can project on nested documents.
+which you can choose to omit.
 
 ```javascript
 // Same database as above
