@@ -69,6 +69,13 @@ describe('update', () => {
 			strictEqual(docs[0].a, 41)
 		})
 
+		it('when $push to field, the element is added', () => {
+			resetDB({_id: 'id', a: []})
+			const cntUpdated = db.update({_id: 'id'}, {$push: {a: 42}})
+			strictEqual(cntUpdated, 1)
+			strictEqual(db.findOne({_id: 'id'})['a'][0], 42)
+		})
+
 		it('when $rename one field, it returns 1', () => {
 			resetDB({_id: 'id', a: 42})
 			const cntUpdated = db.update({a: 42}, {$rename: {a: 'b'}})
@@ -228,8 +235,15 @@ describe('update', () => {
 
 		// Cannot $inc non-numeric field
 		it('when $inc a non-numeric field, it returns 0', () => {
-			resetDB({_id: 'id', a: 'foo'})
+			resetDB({a: 'foo'})
 			const cntUpdated = db.update({a: 'foo'}, {$inc: {a: 1}})
+			strictEqual(cntUpdated, 0)
+		})
+
+		// Cannot $push to a non-array field
+		it('when $push to a non-array field, it returns 0', () => {
+			resetDB({a: 'foo'})
+			const cntUpdated = db.update({a: 'foo'}, {$push: {a: 1}})
 			strictEqual(cntUpdated, 0)
 		})
 

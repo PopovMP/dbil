@@ -276,17 +276,18 @@ matching `query` according to the `update` rules:
 * `options` is an object with one possible parameter:
     * `multi` (defaults to `false`) which allows the modification of several documents if set to `true`.
 
-Possible update options are:
+Possible `update` options are:
 
 ```javascript
 // Format
 // const numUpdated = db.update(query, update, options = {multi: false})
 
 const update = {
-    $inc   : {a: 1, b: -1, ...},       // Increments `a`, `b`, ...
-    $set   : {a: 'foo', b: 42, ...},   // Sets or creates fileds `a`, `b`, ... 
-    $unset : {a: true, b: false, ...}, // Deletes filed `a`
-    $rename: {a: 'b'},                 // Renames filed `a` to `b`
+    $inc   : {a: 1, b: -1, ...},       // Increments 'a', 'b', ...
+    $push  : {a: 1, b: 2, ...},        // Pushes 1 to 'a' and 2 to 'b' if 'a' and 'b' are arrays.
+    $set   : {a: 'foo', b: 42, ...},   // Sets or creates fileds 'a', 'b', ... 
+    $unset : {a: true, b: false, ...}, // Deletes filed 'a'
+    $rename: {a: 'b'},                 // Renames filed 'a' to 'b'
 }
 
 const numUpdated = db.update({}, update)
