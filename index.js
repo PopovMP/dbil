@@ -68,11 +68,10 @@ function getDb(filePath)
 	 */
 	function findOne(query, projection = {})
 	{
+		/** @type {string|undefined} */
 		const id = dbQueryOne(db, query)
 
-		return id === ''
-			? undefined
-			: dbProjection(db[id], projection)
+		return id && dbProjection(db[id], projection)
 	}
 
 	/**

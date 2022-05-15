@@ -207,9 +207,9 @@ describe('queryOne tests', () => {
 	}
 
 	describe('dbQueryOne no match', () => {
-		it('returns empty string', () => {
+		it('returns undefined', () => {
 			const id = dbQueryOne(db, {a: 10})
-			strictEqual(id, '')
+			strictEqual(id, undefined)
 		})
 	})
 
@@ -231,6 +231,13 @@ describe('queryOne tests', () => {
 		it('returns correct id', () => {
 			const id = dbQueryOne(db, {_id: 'baz'})
 			strictEqual(id, 'baz')
+		})
+	})
+
+	describe('dbQueryOne does not match _id', () => {
+		it('returns undefined', () => {
+			const id = dbQueryOne(db, {_id: 'zzz'})
+			strictEqual(id, undefined)
 		})
 	})
 })
