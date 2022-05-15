@@ -83,10 +83,15 @@ describe('query tests', () => {
 	})
 
 	describe('$in', () => {
-		it('$in: [...]', () => {
+		it('field: {$in: [...]}', () => {
 			const ids = dbQuery(db, {a: {$in: [13, 14]}})
 			strictEqual(ids.length, 1)
 			strictEqual(ids[0], 'bar')
+		})
+
+		it('_id: {$in: [...]}', () => {
+			const ids = dbQuery(db, {_id: {$in: ['bar', 'baz', 'ban']}})
+			strictEqual(ids.length, 2)
 		})
 	})
 
