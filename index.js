@@ -1,11 +1,14 @@
 'use strict'
 
-const {logError}            = require('@popovmp/micro-logger')
+const {logError} = require('@popovmp/micro-logger')
+
 const {loadDb, saveDb}      = require('./lib/io-helper')
 const {dbQuery, dbQueryOne} = require('./lib/db-query')
 const {dbProjection}        = require('./lib/db-projection')
 const {dbInsert}            = require('./lib/db-insert')
 const {dbUpdate}            = require('./lib/db-update')
+
+const dbHolder = {}
 
 /**
  * @typedef {Object} ModifyOptions
@@ -17,14 +20,11 @@ const {dbUpdate}            = require('./lib/db-update')
 /**
  *  @param {string} [filePath]
  */
-
-function getDb(filePath)
+function makeDb(filePath)
 {
 	const inMemory = typeof filePath !== 'string' || filePath === ''
 
-	const db = inMemory
-		? {}
-		: loadDb(filePath)
+	const db = inMemory ? {} : loadDb(filePath)
 
 	/**
 	 * Counts docs in DB.
@@ -169,7 +169,6 @@ function getDb(filePath)
 
 	/**
 	 * Saves DB to disc.
-	 * @private
 	 */
 	function save()
 	{
@@ -191,6 +190,25 @@ function getDb(filePath)
 		update,
 		save,
 	}
+}
+
+/**
+ * Gets DB
+ *
+ * @param {string} [filePath]
+ * @param {string} [dbTag]
+ */
+function getDb(filePath, dbTag)
+{
+	if (!filePath)
+		return makeDb()
+
+	const holderKey = dbTag || filePath
+
+	if (!dbHolder[holderKey])
+		dbHolder[holderKey] = makeDb(filePath)
+
+	return dbHolder[holderKey]
 }
 
 module.exports = {

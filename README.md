@@ -21,6 +21,62 @@ npm install @popovmp/dbil
 npm test
 ```
 
+## Usage
+
+DBil stores the data in local 'JSON' files. Each DB is a separate file.
+
+Example application:
+
+DB file: `db/user.json`
+```json
+{
+  "erh2386wehfh1284": {"_id": "erh2386wehfh1284", "name": "John Doe", "email": "john@mail.com", "courses": ["Math", "English"]},
+  "df8s63elka78j3ws": {"_id": "df8s63elka78j3ws", "name": "Sam Jack", "email": "sam@mail.com",  "courses": ["History", "English"]}
+}
+```
+
+File `index.js`
+```javascript
+const {join}  = require('path')
+const {getDb} = require('@popovmp/dbil')
+
+// Initialize DB with filename and tag. Files must exist.
+getDb( join(__dirname, 'db', 'user.json' ), 'user' )
+```
+
+File `user.js`
+```javascript
+const {getDb} = require('@popovmp/dbil')
+
+// Get DB by tag
+const userDb = getDb('user')
+
+function insertUser(user) {
+    userDb.insert(user)
+}
+
+function getUserByEmail(email) {
+    /** @type {User|undefined} */
+    const user = userDb.findOne(email, {email: 1, name: 1, courses: 1, _id: 0})
+    
+    if (!user) {
+        console.error('Cannot find a user with email' + email)
+        return null
+    }
+
+    return user
+}
+
+function getUserEmailsByCourse(course)
+{
+    /** @type {User[]} */
+    const users = userDb.find({courses: {$includes: course}}, {email: 1})
+
+    return users.map(user => user.email)
+}
+```
+
+
 ## API
 
 It is a subset of MongoDB's API (the most used operations).
@@ -41,6 +97,16 @@ It is a subset of MongoDB's API (the most used operations).
 
 You can use DBil as an in-memory only CB or as a persistent DB.
 
+```javascript
+/**
+ * Creates a DB or gets an alreayd created DB.
+ * 
+ * @property {string} [filename] - DB filename - optional
+ * @property {string} [tag]      - DB tag for easier access from otehr modules - optional
+ */
+const db = getDb(filename, tag)
+```
+
 Create in-memory only DB:
 
 ```javascript
@@ -52,11 +118,19 @@ Load a DB from file
 
 ```javascript
 const {getDb} = require('@popovmp/dbil')
-const db = getDb('path/to/db.file')
+// Initialize a persistent DB with a filename and a tag
+const invoiceDb = getDb('path_to_db/invoice.json', 'invoice')
 ```
 
-* `filename` (optional): path to the file where the data is persisted. If left
+Yuo can access the DB from another modules by filename or by tag
+```javascript
+// Use DB
+const invoiceDb = getDb('invoice')
+```
+
+* `filename` (optional) - path to the file where the data is persisted. If left
   blank, the datastore is automatically considered in-memory only. The file must exist at startup.
+* `tag` (option) - if given, it allows access the DB from other node modules.
 
 ### Persistence
 
