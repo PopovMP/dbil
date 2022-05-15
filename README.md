@@ -37,11 +37,13 @@ DB file: `db/user.json`
 
 File `index.js`
 ```javascript
-const {join}  = require('path')
 const {getDb} = require('@popovmp/dbil')
 
 // Initialize DB with filename and tag. Files must exist.
-getDb( join(__dirname, 'db', 'user.json' ), 'user' )
+const dbName  = 'user'
+const db      = getDb( `./dbil/${dbName }.json`, dbName)
+const records = db.count({})
+console.log(`DB loaded: ${dbName}, records: ${records}`)
 ```
 
 File `user.js`
