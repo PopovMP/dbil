@@ -239,17 +239,17 @@ which you can choose to omit.
 ```javascript
 // Same database as above
 
-// Keeping only the given fields
-db.find({planet: 'Mars'}, {planet: 1, system: 1})
-// docs is [{planet: 'Mars', system: 'solar', _id: 'id1'}]
+// Keep only the given fields
+db.findOne({planet: 'Mars'}, {planet: 1, system: 1})
+// doc is {planet: 'Mars', system: 'solar', _id: 'id1'}
 
-// Keeping only the given fields but removing _id
-db.find({ planet: 'Mars' }, {planet: 1, system: 1, _id: 0})
-// docs is [{ planet: 'Mars', system: 'solar' }]
+// Keep only the given fields without_id
+db.findOne({planet: 'Mars'}, {planet: 1, system: 1, _id: 0})
+// doc is {planet: 'Mars', system: 'solar'}
 
-// Omitting only the given fields and removing _id
-db.find({ planet: 'Mars' }, {planet: 0, system: 0, _id: 0})
-// docs is [{inhabited: false, moons: 2}]
+// Omitt only the given fields and remove _id
+db.findOne({planet: 'Mars'}, {planet: 0, system: 0, _id: 0})
+// doc is {inhabited: false, moons: 2}
 ```
 
 ### Counting documents
