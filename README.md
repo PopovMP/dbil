@@ -37,11 +37,13 @@ DB file: `db/user.json`
 
 File `index.js`
 ```javascript
+const {join}  = require('path')
 const {getDb} = require('@popovmp/dbil')
 
 // Initialize DB with filename and tag. Files must exist.
 const dbName  = 'user'
-const db      = getDb( `./dbil/${dbName }.json`, dbName)
+const dbFile = join(__dirname, 'db', `${dbName }.json`)
+const db      = getDb(dbFile, dbName)
 const records = db.count({})
 console.log(`DB loaded: ${dbName}, records: ${records}`)
 ```
@@ -59,7 +61,7 @@ function insertUser(user) {
 
 function getUserByEmail(email) {
     /** @type {User|undefined} */
-    const user = userDb.findOne(email, {email: 1, name: 1, courses: 1, _id: 0})
+    const user = userDb.findOne({email}, {email: 1, name: 1, courses: 1, _id: 0})
     
     if (!user) {
         console.error('Cannot find a user with email' + email)
@@ -77,7 +79,6 @@ function getUserEmailsByCourse(course)
     return users.map(user => user.email)
 }
 ```
-
 
 ## API
 
