@@ -9,7 +9,12 @@ const db = getDb()
 
 function resetDB(docs) {
 	db.remove({}, {multi: true})
-	db.insert(docs)
+
+	if ( Array.isArray(docs) )
+		for (const doc of docs)
+			db.insert(doc)
+	else
+		db.insert(docs)
 }
 
 describe('update', () => {

@@ -82,26 +82,6 @@ describe('insert tests', () => {
 		})
 	})
 
-	describe('insert([O1, O2, ..., On])', () => {
-		const db  = getDb()
-		const ids = db.insert([{a: 1}, {a: 2}, {a: 3}])
-
-		it('returns 3 IDs', () => {
-			strictEqual(ids.length, 3)
-		})
-
-		it('there are 3 docs', () => {
-			const count = db.count({a: {$exists: true}})
-			strictEqual(count, 3)
-		})
-
-		it('docs are correct', () => {
-			const docs = db.find({}, {a: 1})
-			const sum = docs.reduce((sum, doc) => sum + doc.a, 0)
-			strictEqual( sum, 6)
-		})
-	})
-
 	describe('insert(null)', () => {
 		const db  = getDb()
 		const insertId = db.insert(null)

@@ -18,6 +18,12 @@ const dbHolder = {}
  */
 
 /**
+ * @typedef {Object} InsertOptions
+ *
+ * @property {boolean} [skipSave]
+ */
+
+/**
  *  @param {string} [filePath]
  */
 function makeDb(filePath)
@@ -67,7 +73,7 @@ function makeDb(filePath)
 	 */
 	function findOne(query, projection = {})
 	{
-		/** @type {string|undefined} */
+		/** @type {string | undefined} */
 		const id = dbQueryOne(db, query)
 
 		return id && dbProjection(db[id], projection)
@@ -75,30 +81,20 @@ function makeDb(filePath)
 
 	/**
 	 * Inserts a new document to DB.
-	 * Returns the ID of the inserted document.
-	 * Returns an array of the inserted IDs in case of multiple documents.
-	 * Returns `undefined` on a failure.
+	 * Returns the ID of the inserted document or `undefined` on a failure.
 	 *
 	 * @param {Object || Object[]} doc
+	 * @param {InsertOptions} [options]
 	 *
-	 * @return {string | string[] | undefined}
+	 * @return {string | undefined}
 	 */
-	function insert(doc)
+	function insert(doc, options = {})
 	{
-		if ( Array.isArray(doc) ) {
-			const ids = []
-
-			for (const singleDoc of doc)
-				ids.push( dbInsert(db, singleDoc) )
-
-			save()
-
-			return ids
-		}
-
+		/** @type {string | undefined} */
 		const id = dbInsert(db, doc)
 
-		save()
+		if (!options.skipSave)
+			save()
 
 		return id
 	}
@@ -114,6 +110,7 @@ function makeDb(filePath)
 	 */
 	function remove(query, options = {})
 	{
+		/** @type {string[]} */
 		const ids = dbQuery(db, query)
 
 		if (ids.length === 0)
@@ -144,6 +141,7 @@ function makeDb(filePath)
 	 */
 	function update(query, update, options = {})
 	{
+		/** @type {string[]} */
 		const ids = dbQuery(db, query)
 
 		if (ids.length === 0)

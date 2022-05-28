@@ -145,7 +145,9 @@ You can force saving with `db.save()`
 ```javascript
 const db = getDb('./counter.json')
 
-db.insert([{key: 'foo'}, {key: 'bar'}, {key: 'bas'}])
+db.insert({key: 'foo'}, {skipSave: true}) // skipSave on multiple inserts
+db.insert({key: 'foo'}, {skipSave: true})
+db.insert({key: 'foo'}) // Saves the DB and sores the three objects
 
 // Update and save the DB. Note: $inc creates a missing field.
 db.update({key: 'foo'}, {$inc: {count: 1}})
@@ -167,12 +169,6 @@ const id = db.insert(doc)
 
 `db.insert(doc)` returns the id of the inserted document.
 
-You can also bulk-insert an array of documents.
-
-```javascript
-const ids = db.insert([{a: 5}, {a: 42}])
-```
-
 DBil assigns a unique field `_id` to each document. It is a string of length 16 characters.
 
 You can provide your own `_id` of type `string`, however, it must be unique for the db.
@@ -180,6 +176,20 @@ You can provide your own `_id` of type `string`, however, it must be unique for 
 ```javascript
 const id1 = db.insert({a: 1, _id: 'foo'}) // Works. Returns 'foo'
 const id2 = db.insert({a: 2, _id: 'foo'}) // Doesn't work because the _id already exists. Returns 'undefined'
+```
+
+#### Insert multiple docs
+
+When you want to insert multiple docs, call `insert` for each of them.
+
+You can use the `skipSave` when making multiple `insert` to save time on file save.
+Call `db.save` after the last insert.
+
+```javascript
+for (let i = 0; i < max; i++) {
+    db.insert({index: i}, {skipSave: true})
+}
+db.save()
 ```
 
 ### Finding documents
