@@ -145,16 +145,16 @@ You can force saving with `db.save()`
 ```javascript
 const db = getDb('./counter.json')
 
-db.insert({key: 'foo'}, {skipSave: true}) // skipSave on multiple inserts
-db.insert({key: 'foo'}, {skipSave: true})
-db.insert({key: 'foo'}) // Saves the DB and sores the three objects
+db.insert({key: 'foo', count: 0}, {skipSave: true}) // skipSave on multiple inserts
+db.insert({key: 'bar'}, {skipSave: true})
+db.insert({key: 'baz'}) // Saves the DB and sores the three objects
 
 // Update and save the DB. Note: $inc creates a missing field.
 db.update({key: 'foo'}, {$inc: {count: 1}})
 
 // Delay the save
 db.update({key: 'foo'}, {$inc: {count: 1}}, {skipSave: true})
-db.update({key: 'bar'}, {$inc: {count: 1}}, {skipSave: true})
+db.update({key: 'bar'}, {$inc: {count: 1}}, {skipSave: true}) // It will create filed 'count'
 db.save()
 ```
 
