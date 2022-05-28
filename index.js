@@ -51,9 +51,8 @@ function makeDb(filePath)
 		const ids = dbQuery(db, query)
 		const res = []
 
-		for (const id of ids) {
+		for (const id of ids)
 			res.push( dbProjection(db[id], projection) )
-		}
 
 		return res
 	}
@@ -89,9 +88,8 @@ function makeDb(filePath)
 		if ( Array.isArray(doc) ) {
 			const ids = []
 
-			for (const singleDoc of doc) {
+			for (const singleDoc of doc)
 				ids.push( dbInsert(db, singleDoc) )
-			}
 
 			save()
 
@@ -125,9 +123,8 @@ function makeDb(filePath)
 		if (ids.length > 1 && !options.multi)
 			return 0
 
-		for (const id of ids) {
+		for (const id of ids)
 			delete db[id]
-		}
 
 		if (!options.skipSave)
 			save()
@@ -145,7 +142,7 @@ function makeDb(filePath)
 	 *
 	 * @return {number} Count of updated documents
 	 */
-	function update(query, update, options= {})
+	function update(query, update, options = {})
 	{
 		const ids = dbQuery(db, query)
 
@@ -157,9 +154,8 @@ function makeDb(filePath)
 			return 0
 
 		let countUpdated = 0
-		for (const id of ids) {
+		for (const id of ids)
 			countUpdated += dbUpdate(db[id], update) ? 1 : 0
-		}
 
 		if (!options.skipSave)
 			save()
