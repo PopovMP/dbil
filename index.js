@@ -83,7 +83,7 @@ function makeDb(filePath)
 	 * Inserts a new document to DB.
 	 * Returns the ID of the inserted document or `undefined` on a failure.
 	 *
-	 * @param {Object || Object[]} doc
+	 * @param {Object} doc
 	 * @param {InsertOptions} [options]
 	 *
 	 * @return {string | undefined}
@@ -93,7 +93,7 @@ function makeDb(filePath)
 		/** @type {string | undefined} */
 		const id = dbInsert(db, doc)
 
-		if (!options.skipSave)
+		if (id && !options.skipSave)
 			save()
 
 		return id
