@@ -2,6 +2,7 @@
 
 const {logError} = require('@popovmp/micro-logger')
 
+const {dbApi}               = require('./lib/db-api')
 const {loadDb, saveDb}      = require('./lib/io-helper')
 const {dbQuery, dbQueryOne} = require('./lib/db-query')
 const {dbProjection}        = require('./lib/db-projection')
@@ -205,6 +206,20 @@ function getDb(filePath, dbTag)
 	return dbHolder[holderKey]
 }
 
+/**
+ * Initializes a web API. Returns an Express router.
+ *
+ * @param {*}      express
+ * @param {string} apiSecret
+ *
+ * @return {*} Express router
+ */
+function initApi(express, apiSecret)
+{
+	return dbApi(express, dbHolder, apiSecret)
+}
+
 module.exports = {
 	getDb,
+	initApi,
 }

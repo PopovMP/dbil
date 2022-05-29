@@ -8,6 +8,7 @@ Goals:
  - **synchronous** - all queries are synchronous.
  - **fast** - DBil has a simple API with only the most needed instructions. 
  - **clean** - no third party dependencies, no promises (of any kind)...
+ - **API** - web access with API similar to the embedded one
 
 ## Installation, tests
 
@@ -80,7 +81,7 @@ function getUserEmailsByCourse(course)
 }
 ```
 
-## API
+## Embedded API
 
 It is a subset of MongoDB's API (the most used operations).
 
@@ -423,4 +424,76 @@ You may include `micro-logger` to your application and specify the output log fi
 ```javascript
 // In index.js
 require('@popovmp/micro-logger').init('~/logs/my-app.log')
+```
+
+## Web API
+
+DBil can be used remotely via HTTP request. It requires Express to do so.
+
+```javascript
+const express = require('express')
+const dbil    = require('@popovmp/dbil')
+
+const dbNames  = ['account', 'invoice']
+const apiSecret = 'foo-bar'
+
+// Initilaise DB files. File smust exist.
+for (const dbName of dbNames) {
+	const dbFile = path.join(__dirname, 'dbil', `${dbName}.json`)
+	const db     = dbil.getDb(dbFile, dbName)
+	logInfo(`DB loaded: ${dbName}, records: ${db.count({})}`, 'index')
+}
+
+// Initilaise web API
+const dbRouter = dbil.initApi(express, apiSecret)
+
+const app = express()
+app.use('/api/dbil', dbRouter)
+
+const server = http.createServer(app)
+server.listen(8080)
+```
+
+The above Express application initializes 2 DBs: `account` and `invoice`.
+It listens `post` requests at `server/api/dbil/ACTION`,m where ACTION is one of:
+
+ - `count`   
+ - `find`    
+ - `find-one`
+ - `insert`  
+ - `remove`  
+ - `update`  
+ - `save`    
+
+The `post` request has the form of the DBil embed API plus a `secret` and a `dbName` parameters.
+
+Examples:
+
+```javascript
+// find
+// POST to  `server/api/dbil/find`
+const postBody = {
+    secret    : 'foo-bar',
+    dbName    : 'account',
+    query     : {city: 'London'},
+    projection: {name: 1, email: 1, _id: 0}, 
+}
+
+// Response:
+res = {err: null, data: [{user1}, {user2}]}
+
+// update
+// POST to  `server/api/dbil/update`.
+// It adds a Spanish course to an account with an email 'john@example.com'.
+const postBody = {
+    secret  : 'foo-bar', 
+    dbName  : 'account',
+    query   : {email: 'john@example.com'},
+    update  : {$push: {courses: 'Spanish'}},
+    option  : {multi: false}
+}
+
+// Response: numUpdated
+res = {err: null, data: 1}
+
 ```
