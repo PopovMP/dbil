@@ -55,13 +55,7 @@ function makeDb(filePath)
 	 */
 	function find(query, projection = {})
 	{
-		const ids = dbQuery(db, query)
-		const res = []
-
-		for (const id of ids)
-			res.push( dbProjection(db[id], projection) )
-
-		return res
+		return dbQuery(db, query).map( (id) => dbProjection(db[id], projection) )
 	}
 
 	/**
