@@ -8,7 +8,7 @@ Goals:
  - **synchronous** - all queries are synchronous.
  - **fast** - DBil has a simple API with only the most needed instructions. 
  - **clean** - no third party dependencies, no promises (of any kind)...
- - **API** - web access with API similar to the embedded one
+ - **API** - web access with API similar to the embedded one.
 
 ## Installation, tests
 
@@ -43,7 +43,7 @@ const {getDb} = require('@popovmp/dbil')
 
 // Initialize DB with filename and tag. Files must exist.
 const dbName  = 'user'
-const dbFile = join(__dirname, 'db', `${dbName }.json`)
+const dbFile  = join(__dirname, 'db', `${dbName }.json`)
 const db      = getDb(dbFile, dbName)
 const records = db.count({})
 console.log(`DB loaded: ${dbName}, records: ${records}`)
@@ -72,8 +72,7 @@ function getUserByEmail(email) {
     return user
 }
 
-function getUserEmailsByCourse(course)
-{
+function getUserEmailsByCourse(course) {
     /** @type {User[]} */
     const users = userDb.find({courses: {$includes: course}}, {email: 1})
 
@@ -363,6 +362,7 @@ matching `query` according to the `update` rules:
 * `update` specifies how the documents should be modified. It is a set of modifiers for the current fields or new fields.
 * `options` is an object with one possible parameter:
     * `multi` (defaults to `false`) which allows the modification of several documents if set to `true`.
+    * `skipSave` it skip saving DB to file. Default is: `false`.
 
 Possible `update` options are:
 
@@ -400,8 +400,9 @@ const numUpdated = db.update({planet: 'Mars'}, {$unset: {system: true}})
 according to `options`
 
 * `query` is the same as the ones used for finding and updating
-* `options` only one option for now: `multi` which allows the removal of
-  multiple documents if set to true. Default is: `{multi: false}`
+* `options` has two fields:
+  * `multi` which allows the removal of multiple documents if set to true. Default is: `{multi: false}`
+  * `skipSave` it skip saving DB to file. Default is: `{skipSave: false}`
 
 ```javascript
 // Remove one document from the collection
@@ -428,16 +429,16 @@ require('@popovmp/micro-logger').init('~/logs/my-app.log')
 
 ## Web API
 
-DBil can be used remotely via HTTP request. It requires Express to do so.
+DBil can be used remotely via HTTP requests. It requires Express to do so.
 
 ```javascript
 const express = require('express')
 const dbil    = require('@popovmp/dbil')
 
-const dbNames  = ['account', 'invoice']
+const dbNames   = ['account', 'invoice']
 const apiSecret = 'foo-bar'
 
-// Initilaise DB files. File smust exist.
+// Initilaise DB files. Files must exist.
 for (const dbName of dbNames) {
 	const dbFile = path.join(__dirname, 'dbil', `${dbName}.json`)
 	const db     = dbil.getDb(dbFile, dbName)
@@ -455,7 +456,7 @@ server.listen(8080)
 ```
 
 The above Express application initializes 2 DBs: `account` and `invoice`.
-It listens `post` requests at `server/api/dbil/ACTION`,m where ACTION is one of:
+It listens `post` requests at `server/api/dbil/ACTION`, where ACTION is one of:
 
  - `count`   
  - `find`    
@@ -479,8 +480,8 @@ const postBody = {
     projection: {name: 1, email: 1, _id: 0}, 
 }
 
-// Response:
-res = {err: null, data: [{user1}, {user2}]}
+// Response: data = [Object...]
+// {err: null, data: [{user1}, {user2}]}
 
 // update
 // POST to  `server/api/dbil/update`.
@@ -493,7 +494,6 @@ const postBody = {
     option  : {multi: false}
 }
 
-// Response: numUpdated
-res = {err: null, data: 1}
-
+// Response: data = numUpdated
+// {err: null, data: 1}
 ```
