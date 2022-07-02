@@ -108,12 +108,10 @@ function makeDb(filePath)
 		/** @type {string[]} */
 		const ids = dbQuery(db, query)
 
-		if (ids.length === 0)
-			return 0
+		if (ids.length === 0) return 0
 
-		// check for a possibly unwanted remove of multiple docs
-		if (ids.length > 1 && !options.multi)
-			return 0
+		// Check for a possibly unwanted remove of multiple docs
+		if (ids.length > 1 && !options.multi) return 0
 
 		for (const id of ids)
 			delete db[id]
@@ -139,12 +137,10 @@ function makeDb(filePath)
 		/** @type {string[]} */
 		const ids = dbQuery(db, query)
 
-		if (ids.length === 0)
-			return 0
+		if (ids.length === 0) return 0
 
 		// Check of possibly unwanted update of multiple docs
-		if (ids.length > 1 && !options.multi)
-			return 0
+		if (ids.length > 1 && !options.multi) return 0
 
 		let countUpdated = 0
 		for (const id of ids)
@@ -161,8 +157,7 @@ function makeDb(filePath)
 	 */
 	function save()
 	{
-		if (inMemory)
-			return
+		if (inMemory) return
 
 		saveDb(db, filePath, (err) => {
 			if (err)
@@ -210,7 +205,7 @@ function getDb(filePath, dbTag)
  */
 function initApi(express, apiSecret)
 {
-	return dbApi(express, dbHolder, apiSecret)
+	return dbApi(express, {dbHolder, apiSecret})
 }
 
 module.exports = {
