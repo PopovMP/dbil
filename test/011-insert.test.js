@@ -96,6 +96,23 @@ describe('insert tests', () => {
 		})
 	})
 
+	describe('insert( Object.create(null) )', () => {
+		const doc = Object.create(null)
+		Object.assign(doc, {_id: 'foo'})
+
+		const db  = getDb()
+		const insertId = db.insert(doc)
+
+		it('count 1', () => {
+			const count = db.count({})
+			strictEqual(count, 1)
+		})
+
+		it('returns id', () => {
+			strictEqual( insertId, 'foo' )
+		})
+	})
+
 	describe('insert(undefined)', () => {
 		const db  = getDb()
 		const insertId = db.insert(undefined)
