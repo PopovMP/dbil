@@ -110,8 +110,10 @@ function makeDb(filePath)
 
 		if (ids.length === 0) return 0
 
-		// Check for a possibly unwanted remove of multiple docs
-		if (ids.length > 1 && !options.multi) return 0
+		if (ids.length > 1 && !options.multi) {
+			logError('`remove` canceled due to selection of multiple docs', 'remove')
+			return 0
+		}
 
 		for (const id of ids)
 			delete db[id]
@@ -139,8 +141,10 @@ function makeDb(filePath)
 
 		if (ids.length === 0) return 0
 
-		// Check of possibly unwanted update of multiple docs
-		if (ids.length > 1 && !options.multi) return 0
+		if (ids.length > 1 && !options.multi) {
+			logError('`update` canceled due to selection of multiple docs', 'update')
+			return 0
+		}
 
 		let countUpdated = 0
 		for (const id of ids)
