@@ -58,4 +58,12 @@ describe('db-projection', () => {
 			strictEqual(res._id, undefined)
 		})
 	})
+
+	describe('mixed projection', () => {
+		const res = dbProjection(doc, {a: 1, b: 0})
+
+		it('it returns undefined', () => {
+			strictEqual(res, undefined)
+		})
+	})
 })
