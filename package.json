@@ -1,7 +1,7 @@
 {
   "name": "@popovmp/dbil",
   "description": "Simple, synchronous and fast document database with MongoDB syntax.",
-  "version": "4.3.4",
+  "version": "4.4.0",
   "main": "index.js",
   "author": "Popov <info@forexsb.com>",
   "license": "MIT",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:popovmp/dbil.git"
+    "url": "git@github.com:PopovMP/dbil.git"
   },
   "keywords": [
     "document",
