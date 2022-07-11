@@ -62,7 +62,7 @@ function insertUser(user) {
 
 function getUserByEmail(email) {
     /** @type {User|undefined} */
-    const user = userDb.findOne({email}, {email: 1, name: 1, courses: 1, _id: 0})
+    const user = userDb.findOne({email}, {email: 1, name: 1, courses: 1})
     
     if (!user) {
         console.error('Cannot find a user with email' + email)
@@ -169,7 +169,7 @@ const id = db.insert(doc)
 
 `db.insert(doc)` returns the id of the inserted document.
 
-DBil assigns a unique field `_id` to each document. It is a string of length 16 characters.
+DBil assigns a unique `_id` field to each document. It is a string of length 16 characters.
 
 You can provide your own `_id` of type `string`, however, it must be unique for the db.
 
@@ -318,23 +318,20 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 #### Projections
 
 You can give `find` an optional second argument, `projections`.
-The syntax is the same as MongoDB: `{a: 1, b: 1}` to return only the `a`
+The syntax is similar as MongoDB: `{a: 1, b: 1}` to return only the `a`
 and `b` fields, `{a: 0, b: 0}` to omit these two fields. You cannot use both
-modes at the time, except for `_id` which is by default always returned and
-which you can choose to omit.
+modes at the time.
+
+DBil does not inluce `_id` to the response implicitely.
 
 ```javascript
 // Same database as above
 
 // Keep only the given fields
 db.findOne({planet: 'Mars'}, {planet: 1, system: 1})
-// doc is {planet: 'Mars', system: 'solar', _id: 'id1'}
-
-// Keep only the given fields without_id
-db.findOne({planet: 'Mars'}, {planet: 1, system: 1, _id: 0})
 // doc is {planet: 'Mars', system: 'solar'}
 
-// Omitt only the given fields and remove _id
+// Omitt only the given fields and _id
 db.findOne({planet: 'Mars'}, {planet: 0, system: 0, _id: 0})
 // doc is {inhabited: false, moons: 2}
 ```
@@ -477,7 +474,7 @@ const postBody = {
     secret    : 'foo-bar',
     dbName    : 'account',
     query     : {city: 'London'},
-    projection: {name: 1, email: 1, _id: 0}, 
+    projection: {name: 1, email: 1}, 
 }
 
 // Response: data = [Object...]

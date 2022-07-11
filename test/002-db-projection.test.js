@@ -18,16 +18,12 @@ describe('db-projection', () => {
 	describe('dbProjection(doc, {a: 1})', () => {
 		const res = dbProjection(doc, {a: 1})
 
-		it('res includes 2 fields', () => {
-			strictEqual(Object.keys(res).length, 2)
+		it('res includes one field', () => {
+			strictEqual(Object.keys(res).length, 1)
 		})
 
 		it('res includes doc.a', () => {
 			strictEqual(res.a, doc.a)
-		})
-
-		it('res includes doc._id', () => {
-			strictEqual(res._id, doc._id)
 		})
 	})
 
@@ -40,10 +36,6 @@ describe('db-projection', () => {
 
 		it('res does not include doc.a', () => {
 			strictEqual(res.a, undefined)
-		})
-
-		it('res includes doc._id', () => {
-			strictEqual(res._id, doc._id)
 		})
 	})
 
