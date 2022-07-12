@@ -8,121 +8,76 @@ describe('benchmark', () => {
 	const db = getDb() // Make an in-memory DB
 	const countObjects = 1000
 
+	function validate(operation, timeStart, count)
+	{
+		const time = Date.now() - timeStart
+
+		it(`${operation} ops/sec > 5000`, () => {
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`        ${operation} ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
+			strictEqual(opsPerSec > 5000, true)
+		})
+	}
+
 	describe('insert', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		for (let i = 0; i < countObjects; i++) {
-			const doc = {index: i, b: 42}
-			const id  = db.insert(doc)
+		for (let i = 0; i < countObjects; i++)
+			count += db.insert({index: i, b: 42}) ? 1 : 0
 
-			if (id)
-				count++
-		}
-
-		const time = Date.now() - timeStart
-
-		it('insert ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Inserted ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('insert', timeStart, count)
 	})
 
 	describe('find', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		for (let i = 0; i < countObjects; i++) {
-			const found = db.find({index: i, b: {$gte: 42}}, {index: true})
+		for (let i = 0; i < countObjects; i++)
+			count += db.find({index: i, b: {$gte: 42}}, {index: true}).length
 
-			if (found[0].index === i)
-				count++
-		}
-
-		const time = Date.now() - timeStart
-
-		it('find ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('find', timeStart, count)
 	})
 
 	describe('findOne', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		for (let i = 0; i < countObjects; i++) {
-			const doc = db.findOne({index: i, b: {$gte: 42}}, {index: true})
+		for (let i = 0; i < countObjects; i++)
+			count += db.findOne({index: i, b: {$gte: 42}}, {index: true}) ? 1 : 0
 
-			if (doc['index'] === i)
-				count++
-		}
-
-		const time = Date.now() - timeStart
-
-		it('find ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('findOne', timeStart, count)
 	})
 
-	describe('findOne by id', () => {
+	describe('findOne by _id', () => {
 		const timeStart = Date.now()
 		let count = 0
 
 		const ids = db.find({}, {_id: 1}).map(doc => doc._id)
 
-		for (const id of ids) {
-			db.findOne({_id: id}, {index: 1})
-			count++
-		}
+		for (const id of ids)
+			count += db.findOne({_id: id}, {index: 1}) ? 1 : 0
 
-		const time = Date.now() - timeStart
-
-		it('find ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('findOne', timeStart, count)
 	})
 
 	describe('update', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		for (let i = 0; i < countObjects; i++) {
+		for (let i = 0; i < countObjects; i++)
 			count += db.update({index: i, b: {$gte: 42}}, {$set: {b: 13}}, {multi: false})
-		}
 
-		const time = Date.now() - timeStart
-
-		it('update ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Updated ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('udate', timeStart, count)
 	})
 
 	describe('remove', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		for (let i = 0; i < countObjects; i++) {
-			const numRemoved = db.remove({index: i, b: {$lt: 42}})
+		for (let i = 0; i < countObjects; i++)
+			count += db.remove({index: i, b: {$lt: 42}})
 
-			if (numRemoved === 1)
-				count++
-		}
-
-		const time = Date.now() - timeStart
-
-		it('remove ops/sec > 5000', () => {
-			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Removed ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
-			strictEqual(opsPerSec > 5000, true)
-		})
+		validate('remove', timeStart, count)
 	})
 })
