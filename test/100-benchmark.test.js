@@ -1,8 +1,8 @@
 'use strict'
 
-const {strictEqual } = require('assert')
+const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-const {getDb       } = require('../index.js')
+const {getDb}        = require('../index.js')
 
 describe('benchmark', () => {
 	const db = getDb() // Make an in-memory DB
@@ -24,7 +24,7 @@ describe('benchmark', () => {
 
 		it('insert ops/sec > 5000', () => {
 			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Inserted ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			console.log(`Inserted ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
@@ -44,7 +44,7 @@ describe('benchmark', () => {
 
 		it('find ops/sec > 5000', () => {
 			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
@@ -64,7 +64,27 @@ describe('benchmark', () => {
 
 		it('find ops/sec > 5000', () => {
 			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
+			strictEqual(opsPerSec > 5000, true)
+		})
+	})
+
+	describe('findOne by id', () => {
+		const timeStart = Date.now()
+		let count = 0
+
+		const ids = db.find({}, {_id: 1}).map(doc => doc._id)
+
+		for (const id of ids) {
+			db.findOne({_id: id}, {index: 1})
+			count++
+		}
+
+		const time = Date.now() - timeStart
+
+		it('find ops/sec > 5000', () => {
+			const opsPerSec = Math.round((1000 / time) * countObjects)
+			console.log(`Found ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
@@ -81,29 +101,28 @@ describe('benchmark', () => {
 
 		it('update ops/sec > 5000', () => {
 			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Updated ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			console.log(`Updated ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
 
-	describe('find by index', () => {
+	describe('remove', () => {
 		const timeStart = Date.now()
 		let count = 0
 
-		const ids = db.find({}, {_id: 1}).map(doc => doc._id)
+		for (let i = 0; i < countObjects; i++) {
+			const numRemoved = db.remove({index: i, b: {$lt: 42}})
 
-		for (const id of ids) {
-			db.find({_id: id}, {index: true})
-			count++
+			if (numRemoved === 1)
+				count++
 		}
 
 		const time = Date.now() - timeStart
 
-		it('find ops/sec > 5000', () => {
+		it('remove ops/sec > 5000', () => {
 			const opsPerSec = Math.round((1000 / time) * countObjects)
-			console.log(`Found ${count} docs for ${time}ms. Ops/sec: ${opsPerSec}`)
+			console.log(`Removed ${count} docs for ${time}ms. ops/sec: ${opsPerSec}`)
 			strictEqual(opsPerSec > 5000, true)
 		})
 	})
 })
-
