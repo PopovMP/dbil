@@ -6,7 +6,7 @@ Goals:
  - **simple** - syntax similar to MongoDB / NeDB.
  - **embedded** - it can be embedded directly in a host application and store DBs in local files.
  - **synchronous** - all queries are synchronous.
- - **fast** - DBil has a simple API with only the most needed instructions. 
+ - **fast** - DBil has a simple API with only the most needed instructions.
  - **clean** - no third party dependencies, no promises (of any kind)...
  - **API** - web access with API similar to the embedded one.
 
@@ -63,7 +63,7 @@ function insertUser(user) {
 function getUserByEmail(email) {
     /** @type {User|undefined} */
     const user = userDb.findOne({email}, {email: 1, name: 1, courses: 1})
-    
+
     if (!user) {
         console.error('Cannot find a user with email' + email)
         return null
@@ -103,7 +103,7 @@ You can use DBil as an in-memory only CB or as a persistent DB.
 ```javascript
 /**
  * Creates a DB or gets an alreayd created DB.
- * 
+ *
  * @property {string} [filename] - DB filename - optional
  * @property {string} [tag]      - DB tag for easier access from otehr modules - optional
  */
@@ -245,8 +245,7 @@ operator:
 * `$in`: member of an array of values
 * `$includes`: a `string` or an `array` field includes the value
 * `$nin`: not a member of an array
-* `$exists`: checks whether the document posses the property `field`. `value`
-  should be true or false
+* `$exists`: checks whether the document posses the property `field`. `value` should be true or false
 * `$regex`: checks whether a string is matched by the regular expression.
 * `$type`: checks for a field type. It accepts all JS types + `'array'`
 
@@ -318,9 +317,9 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 #### Projections
 
 You can give `find` an optional second argument, `projections`.
-The syntax is similar as MongoDB: `{a: 1, b: 1}` to return only the `a`
-and `b` fields, `{a: 0, b: 0}` to omit these two fields. You cannot use both
-modes at the time.
+The syntax is similar to MongoDB: `{a: 1, b: 1}` to return only the `a` and `b` fields.
+The projection can be exclusive `{a: 0, b: 0}` to omit these two fields.
+You cannot mix inclusibe and exclusive fields.
 
 DBil does not inluce `_id` to the response implicitely.
 
@@ -331,7 +330,7 @@ DBil does not inluce `_id` to the response implicitely.
 db.findOne({planet: 'Mars'}, {planet: 1, system: 1})
 // doc is {planet: 'Mars', system: 'solar'}
 
-// Omitt only the given fields and _id
+// Omit the given fields and _id
 db.findOne({planet: 'Mars'}, {planet: 0, system: 0, _id: 0})
 // doc is {inhabited: false, moons: 2}
 ```
@@ -370,7 +369,7 @@ Possible `update` options are:
 const update = {
     $inc   : {a: 1, b: -1, ...},       // Increments 'a', 'b', ...
     $push  : {a: 1, b: 2, ...},        // Pushes 1 to 'a' and 2 to 'b' if 'a' and 'b' are arrays.
-    $set   : {a: 'foo', b: 42, ...},   // Sets or creates fileds 'a', 'b', ... 
+    $set   : {a: 'foo', b: 42, ...},   // Sets or creates fileds 'a', 'b', ...
     $unset : {a: true, b: false, ...}, // Deletes filed 'a'
     $rename: {a: 'b'},                 // Renames filed 'a' to 'b'
 }
@@ -393,8 +392,7 @@ const numUpdated = db.update({planet: 'Mars'}, {$unset: {system: true}})
 
 ### Removing documents
 
-`db.remove(query, options)` will remove all documents matching `query`
-according to `options`
+`db.remove(query, options)` will remove all documents matching `query` according to `options`.
 
 * `query` is the same as the ones used for finding and updating
 * `options` has two fields:
@@ -455,13 +453,13 @@ server.listen(8080)
 The above Express application initializes 2 DBs: `account` and `invoice`.
 It listens `post` requests at `server/api/dbil/ACTION`, where ACTION is one of:
 
- - `count`   
- - `find`    
+ - `count`
+ - `find`
  - `find-one`
- - `insert`  
- - `remove`  
- - `update`  
- - `save`    
+ - `insert`
+ - `remove`
+ - `update`
+ - `save`
 
 The `post` request has the form of the DBil embed API plus a `secret` and a `dbName` parameters.
 
@@ -474,7 +472,7 @@ const postBody = {
     secret    : 'foo-bar',
     dbName    : 'account',
     query     : {city: 'London'},
-    projection: {name: 1, email: 1}, 
+    projection: {name: 1, email: 1},
 }
 
 // Response: data = [Object...]
@@ -484,7 +482,7 @@ const postBody = {
 // POST to  `server/api/dbil/update`.
 // It adds a Spanish course to an account with an email 'john@example.com'.
 const postBody = {
-    secret  : 'foo-bar', 
+    secret  : 'foo-bar',
     dbName  : 'account',
     query   : {email: 'john@example.com'},
     update  : {$push: {courses: 'Spanish'}},
