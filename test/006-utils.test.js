@@ -1,8 +1,7 @@
 'use strict'
 
-const {strictEqual}  = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
-
+const {strictEqual}   = require('assert')
+const {describe, it}  = require('@popovmp/mocha-tiny')
 const {uid, cloneObj} = require('../lib/utils')
 
 describe('uid', () => {

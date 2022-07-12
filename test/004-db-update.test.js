@@ -2,7 +2,7 @@
 
 const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-const {dbUpdate} = require('../lib/db-update')
+const {dbUpdate}     = require('../lib/update')
 
 describe('db-projection', () => {
 	const doc = {a: 1, b: 2, _id: 'foo'}

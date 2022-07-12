@@ -2,7 +2,7 @@
 
 const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-const {dbInsert}     = require('../lib/db-insert')
+const {dbInsert}     = require('../lib/insert')
 
 describe('db-insert', () => {
 

@@ -1,9 +1,8 @@
 'use strict'
 
-const {strictEqual} = require('assert')
+const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-
-const {getDb} = require('../index.js')
+const {getDb}        = require('../index.js')
 
 describe('insert tests', () => {
 

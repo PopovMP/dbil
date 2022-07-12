@@ -1,9 +1,9 @@
 'use strict'
 
-const {strictEqual} = require('assert')
+const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
+const {getDb}        = require('../index.js')
 
-const {getDb} = require('../index.js')
 const db  = getDb()
 
 db.insert({planet: 'Mars',    system: 'solar',  inhabited: false})

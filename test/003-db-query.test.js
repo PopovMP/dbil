@@ -1,9 +1,8 @@
 'use strict'
 
-const {strictEqual} = require('assert')
+const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-
-const {dbQuery, dbQueryOne} = require('../lib/db-query')
+const {dbQuery, dbQueryOne} = require('../lib/query')
 
 describe('query tests', () => {
 	const db  = {

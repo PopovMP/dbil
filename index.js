@@ -2,12 +2,12 @@
 
 const {logError} = require('@popovmp/micro-logger')
 
-const {dbApi}               = require('./lib/db-api')
-const {loadDb, saveDb}      = require('./lib/io-helper')
-const {dbQuery, dbQueryOne} = require('./lib/db-query')
-const {dbProjection}        = require('./lib/db-projection')
-const {dbInsert}            = require('./lib/db-insert')
-const {dbUpdate}            = require('./lib/db-update')
+const {dbApi}               = require('./lib/api')
+const {loadDb, saveDb}      = require('./lib/io')
+const {dbQuery, dbQueryOne} = require('./lib/query')
+const {dbProjection}        = require('./lib/projection')
+const {dbInsert}            = require('./lib/insert')
+const {dbUpdate}            = require('./lib/update')
 
 const dbHolder = {}
 
