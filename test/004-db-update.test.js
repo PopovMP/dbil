@@ -2,40 +2,75 @@
 
 const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
-const {dbUpdate}     = require('../lib/update')
+const {getLastError, resetLastError} = require('@popovmp/micro-logger')
+const {dbUpdate} = require('../lib/update')
 
-describe('db-projection', () => {
-	const doc = {a: 1, b: 2, _id: 'foo'}
+describe('dbUpdate', () => {
 
-	describe('dbUpdate(doc, {$inc: {a: 1}})', () => {
-		dbUpdate(doc, {$inc: {a: 1}})
+	describe('$inc', () => {
 
-		it('it increments `a`', () => {
+		it('when $inc a non-existing field, it creates the field with value of delta', () => {
+			const doc = {}
+			dbUpdate(doc, {$inc: {a: 1}})
+			strictEqual(doc.a, 1)
+		})
+
+		it('when $inc `a` with delta of 1, it increments `a`', () => {
+			const doc = {a: 1}
+			dbUpdate(doc, {$inc: {a: 1}})
 			strictEqual(doc.a, 2)
 		})
-	})
 
-	describe('dbUpdate(doc, {$inc: {a: -1, b: -1}})', () => {
-		dbUpdate(doc, {$inc: {a: -1, b: -1}})
+		it('when $inc `a` and `b` with delta of -1, it decrements `a` and `b`', () => {
+			const doc = {a: -13, b: 42}
+			dbUpdate(doc, {$inc: {a: -1, b: -1}})
+			strictEqual(doc.a, -14)
+			strictEqual(doc.b, 41)
+		})
 
-		it('it decrements `a`', () => {
+		it('when $inc `a` with delta of 0, it does not change `a`', () => {
+			const doc = {a: 1}
+			dbUpdate(doc, {$inc: {a: 0}})
 			strictEqual(doc.a, 1)
 		})
 
-		it('it decrements `b`', () => {
-			strictEqual(doc.b, 1)
+		it('when $inc is successful, it returns 1', () => {
+			const doc = {a: 1}
+			const numUpdated = dbUpdate(doc, {$inc: {a: 0}})
+			strictEqual(numUpdated, 1)
+		})
+
+		it('when try $inc a non-numeric field, it returns 0', () => {
+			const doc = {name: 'foo'}
+			const numUpdated = dbUpdate(doc, {$inc: {name: 1}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('when try $inc a non-numeric field, it logs an error', () => {
+			const doc = {name: 'foo'}
+			resetLastError()
+			dbUpdate(doc, {$inc: {name: 1}})
+			const err = getLastError()
+			strictEqual(err, 'cannot $inc field "name" of type: string')
+		})
+
+		it('when try $inc with a non-numeric delta, it returns 0', () => {
+			const doc = {a: 1}
+			const numUpdated = dbUpdate(doc, {$inc: {a: 'foo'}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('when try $inc with a non-numeric delta, it logs an error', () => {
+			const doc = {a: 1}
+			resetLastError()
+			dbUpdate(doc, {$inc: {a: 'foo'}})
+			const err = getLastError()
+			strictEqual(err, 'cannot $inc with a non-numeric delta: foo')
 		})
 	})
 
-	describe('dbUpdate(doc, {$inc: {a: 0}})', () => {
-		dbUpdate(doc, {$inc: {a: 0}})
-
-		it('it does not change `a`', () => {
-			strictEqual(doc.a, 1)
-		})
-	})
-
-	describe('dbUpdate(doc, {$set: {a: 13}})', () => {
+	describe('when $set `a`', () => {
+		const doc = {a: 1, b: 1}
 		dbUpdate(doc, {$set: {a: 13}})
 
 		it('it sets `a`', () => {
@@ -47,7 +82,8 @@ describe('db-projection', () => {
 		})
 	})
 
-	describe('dbUpdate(doc, {$set: {a: 42, b: 42}})', () => {
+	describe('when $set `a` and `b`', () => {
+		const doc = {a: 1, b: 1}
 		dbUpdate(doc, {$set: {a: 42, b: 42}})
 
 		it('it sets `a`', () => {
@@ -59,7 +95,8 @@ describe('db-projection', () => {
 		})
 	})
 
-	describe('dbUpdate(doc, {$unset: {a: 1, b: false}})', () => {
+	describe('when $unset `a` with flag  1 and `b`with flag `false`', () => {
+		const doc = {a: 1, b: 1}
 		dbUpdate(doc, {$unset: {a: 1, b: false}})
 
 		it('it unsets `a`', () => {
@@ -67,20 +104,7 @@ describe('db-projection', () => {
 		})
 
 		it('it does not unset `b`', () => {
-			strictEqual(doc.b, 42)
-		})
-	})
-
-	describe('dbUpdate(doc, {$set: {a: 42}, $inc: {b: 1}})', () => {
-		dbUpdate(doc, {$set: {a: 42}, $inc: {b: 1}})
-
-		it('it sets `a`', () => {
-			strictEqual(doc.a, 42)
-		})
-
-		it('it increments `b`', () => {
-			strictEqual(doc.b, 43)
+			strictEqual(doc.b, 1)
 		})
 	})
 })
-

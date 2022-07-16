@@ -126,13 +126,12 @@ function makeDb(filePath)
 
 	/**
 	 * Updates all documents matching the query.
-	 * Returns the count of the updated docs.
 	 *
 	 * @param {Object} query
 	 * @param {Object} update
 	 * @param {ModifyOptions} [options]
 	 *
-	 * @return {number} Count of updated documents
+	 * @return {number} numUpdated - the number of updated documents
 	 */
 	function update(query, update, options = {})
 	{
@@ -146,14 +145,14 @@ function makeDb(filePath)
 			return 0
 		}
 
-		let countUpdated = 0
+		let numUpdated = 0
 		for (const id of ids)
-			countUpdated += dbUpdate(db[id], update) ? 1 : 0
+			numUpdated += dbUpdate(db[id], update)
 
-		if (!options.skipSave)
+		if (numUpdated > 0 && !options.skipSave)
 			save()
 
-		return countUpdated
+		return numUpdated
 	}
 
 	/**
