@@ -296,7 +296,7 @@ You can combine queries using logical operators:
 * `{$not   : query }`
 * `{$where : function (doc) {...; return true/false} }`
 * `field: value`
-* `field: {$op: value}`
+* `field: {$op: value, ...}`
 
 ```javascript
 db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}]})
@@ -311,6 +311,10 @@ db.find({$where: doc => doc.planet.length > 6})
 // You can mix normal queries, comparison queries and logical operators
 db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 // docs contains Earth
+
+// Multiple operators
+db.find({moons: {$gte: 1, $lt: 5}}, {planet: 1})
+// => [{planet: 'Mars'}, {planet: 'Earth'}]
 ```
 
 #### Projections

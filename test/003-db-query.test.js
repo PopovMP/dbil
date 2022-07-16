@@ -4,7 +4,7 @@ const {strictEqual}  = require('assert')
 const {describe, it} = require('@popovmp/mocha-tiny')
 const {dbQuery, dbQueryOne} = require('../lib/query')
 
-describe('query tests', () => {
+describe('dbQuery', () => {
 	const db  = {
 		'foo': {_id: 'foo', a: 42, b: 'b', c: '1', f: 'car', d: 0},
 		'bar': {_id: 'bar', a: 13, b: 'b', c: '2', f: 'mar', s: [1]},
@@ -198,7 +198,7 @@ describe('query tests', () => {
 	})
 })
 
-describe('queryOne tests', () => {
+describe('queryOne', () => {
 	const db = {
 		'foo': {_id: 'foo', a: 42},
 		'bar': {_id: 'bar', a: 13},
@@ -237,6 +237,45 @@ describe('queryOne tests', () => {
 		it('returns undefined', () => {
 			const id = dbQueryOne(db, {_id: 'zzz'})
 			strictEqual(id, undefined)
+		})
+	})
+})
+
+describe('evalOperatorSet', () => {
+	const db = {
+		'1': {_id: '1', a: 1},
+		'2': {_id: '2', a: 2},
+		'3': {_id: '3', a: 3},
+		'4': {_id: '4', a: 4},
+	}
+
+	describe('when given several operators', () => {
+		it('matches against all of them', () => {
+			const ids = dbQuery(db, {a: {$gt: 1, $lte: 3}})
+			strictEqual(ids.length, 2)
+			strictEqual(ids[0], '2')
+			strictEqual(ids[1], '3')
+		})
+	})
+
+	describe('when operator set is empty', () => {
+		it('matches all', () => {
+			const ids = dbQuery(db, {a: {}})
+			strictEqual(ids.length, 4)
+		})
+	})
+
+	describe('when some of the ops does not match', () => {
+		it('gets an empty list', () => {
+			const ids = dbQuery(db, {a: {$gte: 2, $lt: 1}})
+			strictEqual(ids.length, 0)
+		})
+	})
+
+	describe('when it is given a wrong opKey', () => {
+		it('logs an error', () => {
+			const ids = dbQuery(db, {a: {$gte: 1, $dummy: 42}})
+			strictEqual(ids.length, 0)
 		})
 	})
 })
