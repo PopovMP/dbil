@@ -139,23 +139,22 @@ const invoiceDb = getDb('invoice')
 
 DBil saves the DB after successful `insert`, `update`, or `remove` operation if filename is provided in `getDb`.
 
-You can skip saving in the `update` and `remove` commands with an option `{skipSave: true}`.
-You can force saving with `db.save()`
+You can skip the save with an option `{skipSave: true}`.
+You can perform saving with a command: `db.save()`
 
 ```javascript
 const db = getDb('./counter.json')
 
-db.insert({key: 'foo', count: 0}, {skipSave: true}) // skipSave on multiple inserts
-db.insert({key: 'bar'}, {skipSave: true})
-db.insert({key: 'baz'}) // Saves the DB and sores the three objects
+db.insert({name: 'foo'}, {skipSave: true}) // Inserts the doc but skips saving
+db.insert({name: 'bar'}, {skipSave: true}) // Inserts the doc but skips saving
+db.insert({name: 'baz'})                   // Inserts the doc and saves the DB
 
-// Update and save the DB. Note: $inc creates a missing field.
-db.update({key: 'foo'}, {$inc: {count: 1}})
+db.update({name: 'foo'}, {$set: {count: 0}}) // Updates and saves the DB
 
-// Delay the save
-db.update({key: 'foo'}, {$inc: {count: 1}}, {skipSave: true})
-db.update({key: 'bar'}, {$inc: {count: 1}}, {skipSave: true}) // It will create filed 'count'
-db.save()
+// Updates two docs without saving
+db.update({name: 'foo'}, {$inc: {count: 1}}, {skipSave: true})
+db.update({name: 'bar'}, {$inc: {count: 1}}, {skipSave: true}) // $inc creates the 'count' field
+db.save() // Saves the DB
 ```
 
 ### Inserting documents
@@ -319,9 +318,9 @@ db.find({$or: [{planet: 'Earth'}, {planet: 'Mars'}], inhabited: true})
 You can give `find` an optional second argument, `projections`.
 The syntax is similar to MongoDB: `{a: 1, b: 1}` to return only the `a` and `b` fields.
 The projection can be exclusive `{a: 0, b: 0}` to omit these two fields.
-You cannot mix inclusibe and exclusive fields.
+You cannot mix inclusive and exclusive fields.
 
-DBil does not inluce `_id` to the response implicitely.
+DBil does not include `_id` to the response implicitly.
 
 ```javascript
 // Same database as above

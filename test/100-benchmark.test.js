@@ -68,7 +68,7 @@ describe('benchmark', () => {
 		for (let i = 0; i < countObjects; i++)
 			count += db.update({index: i, b: {$gte: 42}}, {$set: {b: 13}}, {multi: false})
 
-		validate('udate', timeStart, count)
+		validate('update', timeStart, count)
 	})
 
 	describe('remove', () => {
