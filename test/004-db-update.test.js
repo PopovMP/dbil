@@ -69,6 +69,41 @@ describe('dbUpdate', () => {
 		})
 	})
 
+	describe('$push', () => {
+
+		it('when $push to a non-existing field, it creates the field with the given element', () => {
+			const doc = {}
+			dbUpdate(doc, {$push: {list: 42}})
+			strictEqual(doc.list[0], 42)
+		})
+
+		it('when $push to a field, it pushes the element', () => {
+			const doc = {list: []}
+			dbUpdate(doc, {$push: {list: 42}})
+			strictEqual(doc.list[0], 42)
+		})
+
+		it('when $push to a field, it returns 1', () => {
+			const doc = {list: []}
+			const numUpdated = dbUpdate(doc, {$push: {list: 42}})
+			strictEqual(numUpdated, 1)
+		})
+
+		it('when try $push to a non-array field, it returns 0', () => {
+			const doc = {name: 'foo'}
+			const numUpdated = dbUpdate(doc, {$push: {name: 1}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('when try $push to a non-array field, it logs an error', () => {
+			const doc = {name: 'foo'}
+			resetLastError()
+			dbUpdate(doc, {$push: {name: 1}})
+			const err = getLastError()
+			strictEqual(err, 'cannot $push to field "name" of type: string')
+		})
+	})
+
 	describe('when $set `a`', () => {
 		const doc = {a: 1, b: 1}
 		dbUpdate(doc, {$set: {a: 13}})
