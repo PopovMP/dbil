@@ -104,6 +104,51 @@ describe('dbUpdate', () => {
 		})
 	})
 
+	describe('$rename', () => {
+
+		it('when $rename a filed, the object has the new field', () => {
+			const doc = {foo: 42}
+			dbUpdate(doc, {$rename: {foo: 'bar'}})
+			strictEqual(doc.bar, 42)
+		})
+
+		it('when $rename a filed, the object do not have the old field', () => {
+			const doc = {foo: 42}
+			dbUpdate(doc, {$rename: {foo: 'bar'}})
+			strictEqual(doc.foo, undefined)
+		})
+
+		it('when $rename a filed, it returns 1', () => {
+			const doc = {foo: 42}
+			const numUpdated = dbUpdate(doc, {$rename: {foo: 'bar'}})
+			strictEqual(numUpdated, 1)
+		})
+
+		it('cannot $rename _id', () => {
+			const doc = {}
+			const numUpdated = dbUpdate(doc, {$rename: {_id: 'bar'}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('cannot $rename to a non-string name', () => {
+			const doc = {foo: 42}
+			const numUpdated = dbUpdate(doc, {$rename: {foo: 1}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('cannot $rename to an existing name', () => {
+			const doc = {foo: 42, bar: 12}
+			const numUpdated = dbUpdate(doc, {$rename: {foo: 'bar'}})
+			strictEqual(numUpdated, 0)
+		})
+
+		it('when try to $rename a non-existing field, it returns 0', () => {
+			const doc = {}
+			const numUpdated = dbUpdate(doc, {$rename: {foo: 'bar'}})
+			strictEqual(numUpdated, 0)
+		})
+	})
+
 	describe('when $set `a`', () => {
 		const doc = {a: 1, b: 1}
 		dbUpdate(doc, {$set: {a: 13}})
