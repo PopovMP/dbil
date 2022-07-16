@@ -111,7 +111,7 @@ function makeDb(filePath)
 		if (ids.length === 0) return 0
 
 		if (ids.length > 1 && !options.multi) {
-			logError('`remove` canceled due to selection of multiple docs', 'remove')
+			logError('cannot `remove` multiple docs without an option `multi`', 'remove')
 			return 0
 		}
 
@@ -141,7 +141,7 @@ function makeDb(filePath)
 		if (ids.length === 0) return 0
 
 		if (ids.length > 1 && !options.multi) {
-			logError('`update` canceled due to selection of multiple docs', 'update')
+			logError('cannot `update` multiple docs without an option `multi`', 'update')
 			return 0
 		}
 
@@ -164,7 +164,7 @@ function makeDb(filePath)
 
 		saveDb(db, filePath, (err) => {
 			if (err)
-				logError(`Error with DB save: ${err}`, 'save')
+				logError(err, 'save')
 		})
 	}
 
