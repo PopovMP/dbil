@@ -1,6 +1,7 @@
 'use strict'
 
 const {strictEqual}  = require('assert')
+const {getLastError, resetLastError} = require('@popovmp/micro-logger')
 const {describe, it} = require('@popovmp/mocha-tiny')
 const {dbQuery, dbQueryOne} = require('../lib/query')
 
@@ -278,4 +279,95 @@ describe('evalOperatorSet', () => {
 			strictEqual(ids.length, 0)
 		})
 	})
+})
+
+describe('validateQuery', () => {
+	const db = {}
+
+	describe('query must be an object', () => {
+		it('logs an error when null', () => {
+			resetLastError()
+			const id = dbQueryOne(db, null)
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, 'query is not an object: null')
+		})
+
+		it('logs an error when an array', () => {
+			resetLastError()
+			const id = dbQueryOne(db, [])
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, 'query is not an object: array')
+		})
+
+		it('logs an error when a string', () => {
+			resetLastError()
+			const id = dbQueryOne(db, 'query')
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, 'query is not an object: string')
+		})
+	})
+
+	describe('$and accepts an array', () => {
+		it ('logs an error when an object', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {$and: {foo: 42}})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, '$and parameter is not an array: object')
+		})
+	})
+
+	describe('$or accepts an array', () => {
+		it ('logs an error when an object', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {$or: {foo: 42}})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, '$or parameter is not an array: object')
+		})
+	})
+
+	describe('$not accepts an object', () => {
+		it ('logs an error when an array', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {$not: [42]})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, 'query is not an object: array')
+		})
+	})
+
+	describe('$where accepts a function', () => {
+		it ('logs an error when an object', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {$where: {a: 42}})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, '$where parameter is not a function: object')
+		})
+	})
+
+	describe('$exists accepts boolean, 1, or, 0', () => {
+		it ('logs an error when 42', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {foo: {$exists: 42}})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, '$exists operand is not true, false, 1, or 0: number')
+		})
+	})
+
+	describe('comparison operators accepts a number', () => {
+		it ('logs an error when a string', () => {
+			resetLastError()
+			const id = dbQueryOne(db, {value: {$gt: 0, $lte: '42'}})
+			const err = getLastError()
+			strictEqual(id, undefined)
+			strictEqual(err, '$lte operand is not a number: string')
+		})
+	})
+
 })
