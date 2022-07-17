@@ -363,10 +363,10 @@ describe('validateQuery', () => {
 	describe('comparison operators accepts a number', () => {
 		it ('logs an error when a string', () => {
 			resetLastError()
-			const id = dbQueryOne(db, {value: {$gt: 0, $lte: '42'}})
+			const id = dbQueryOne(db, {value: {$gt: 0, $gte: 1, $lt: 42, $lte: null}})
 			const err = getLastError()
 			strictEqual(id, undefined)
-			strictEqual(err, '$lte operand is not a number: string')
+			strictEqual(err, '$lte operand is not a string or a number: object')
 		})
 	})
 
