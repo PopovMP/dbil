@@ -444,13 +444,12 @@ for (const dbName of dbNames) {
 }
 
 // Initilaise web API
-const dbRouter = dbil.initApi(express, apiSecret)
+const dbRouter = dbil.initApi(express.Router(), apiSecret)
 
 const app = express()
 app.use('/api/dbil', dbRouter)
 
-const server = http.createServer(app)
-server.listen(8080)
+app.listen(8080)
 ```
 
 The above Express application initializes 2 DBs: `account` and `invoice`.
