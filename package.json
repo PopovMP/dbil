@@ -9,12 +9,9 @@
   "dependencies": {
     "@popovmp/micro-logger": "^1.8.0"
   },
-  "devDependencies": {
-    "@popovmp/mocha-tiny": "^2.2.0"
-  },
   "scripts": {
-    "test": "mocha-tiny",
-    "prepublishOnly": "npm test"
+    "test": "node --test",
+    "prepublishOnly": "node --test"
   },
   "repository": {
     "type": "git",

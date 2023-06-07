@@ -1,283 +1,289 @@
-'use strict'
+"use strict";
 
-const {strictEqual}  = require('assert')
-const {describe, it} = require('@popovmp/mocha-tiny')
-const {getDb, initApi} = require('../index.js')
+const {strictEqual}    = require("assert");
+const {describe, it}   = require("node:test");
+const {getDb, initApi} = require("../index.js");
 
-const dbFilename = /** @type {string} */ true // hack to make an inmemory db with a tag
-const dbTagName  = 'my-memory-db'
-const apiSecret  = 'mu-api-secret'
+const dbFilename = /** @type {string} */ true; // hack to make an in-memory db with a tag
+const dbTagName  = "my-memory-db";
+const apiSecret  = "mu-api-secret";
 
-getDb(dbFilename, dbTagName)
-const router =  /** @type {ExpressRouterMoq} */ initApi(makeRouter(), apiSecret)
+getDb(dbFilename, dbTagName);
+const router =  /** @type {ExpressRouterMoq} */ initApi(makeRouter(), apiSecret);
 
-describe('API', () => {
+describe("API", () => {
 
-	describe('when inserts a doc, it responds', () => {
-		insert({'foo': 13},  {multi: 0, skipSave: 1}, (err, _id) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when inserts a doc, it responds", () => {
+        insert({"foo": 13}, {multi: 0, skipSave: 1}, (err, _id) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('_id is string ', () => {
-				strictEqual(typeof _id, 'string')
-			})
+            it("_id is string ", () => {
+                strictEqual(typeof _id, "string");
+            });
 
-			it('_id is 16 chars', () => {
-				strictEqual(_id.length, 16)
-			})
-		})
-	})
+            it("_id is 16 chars", () => {
+                strictEqual(_id.length, 16);
+            });
+        });
+    });
 
-	describe('when inserts a doc without options, it responds', () => {
-		insert({'foo': 42}, undefined, (err, _id) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when inserts a doc without options, it responds", () => {
+        insert({"foo": 42}, undefined, (err, _id) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('_id is string ', () => {
-				strictEqual(typeof _id, 'string')
-			})
+            it("_id is string ", () => {
+                strictEqual(typeof _id, "string");
+            });
 
-			it('_id is 16 chars', () => {
-				strictEqual(_id.length, 16)
-			})
-		})
-	})
+            it("_id is 16 chars", () => {
+                strictEqual(_id.length, 16);
+            });
+        });
+    });
 
-	describe('when count docs', () => {
-		count({}, (err, count) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when count docs", () => {
+        count({}, (err, count) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('count is 2 ', () => {
-				strictEqual(count, 2)
-			})
-		})
-	})
+            it("count is 2 ", () => {
+                strictEqual(count, 2);
+            });
+        });
+    });
 
-	describe('when try to remove two docs without multi: 1', () => {
-		remove({foo: {$exists: 1}}, undefined, (err, numRemoved) => {
-			it('it returns an error', () => {
-				strictEqual(typeof err, 'string')
-			})
+    describe("when try to remove two docs without multi: 1", () => {
+        remove({foo: {$exists: 1}}, undefined, (err, numRemoved) => {
+            it("it returns an error", () => {
+                strictEqual(typeof err, "string");
+            });
 
-			it('numRemoved = 0', () => {
-				strictEqual(numRemoved, 0)
-			})
-		})
-	})
+            it("numRemoved = 0", () => {
+                strictEqual(numRemoved, 0);
+            });
+        });
+    });
 
-	describe('when find a doc', () => {
-		find({foo: {$gt: 20}}, undefined, (err, docs) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when find a doc", () => {
+        find({foo: {$gt: 20}}, undefined, (err, docs) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('docs is an array', () => {
-				strictEqual(Array.isArray(docs), true)
-			})
+            it("docs is an array", () => {
+                strictEqual(Array.isArray(docs), true);
+            });
 
-			it('it includes the correct doc', () => {
-				strictEqual(docs[0].foo, 42)
-			})
-		})
-	})
+            it("it includes the correct doc", () => {
+                strictEqual(docs[0].foo, 42);
+            });
+        });
+    });
 
-	describe('when find with query of null', () => {
-		find(null, {}, (err, docs) => {
-			it('it returns an error', () => {
-				strictEqual(typeof err, 'string')
-			})
+    describe("when find with query of null", () => {
+        find(null, {}, (err, docs) => {
+            it("it returns an error", () => {
+                strictEqual(typeof err, "string");
+            });
 
-			it('docs is an array', () => {
-				strictEqual(Array.isArray(docs), true)
-			})
+            it("docs is an array", () => {
+                strictEqual(Array.isArray(docs), true);
+            });
 
-			it('docs is empty', () => {
-				strictEqual(docs.length, 0)
-			})
-		})
-	})
+            it("docs is empty", () => {
+                strictEqual(docs.length, 0);
+            });
+        });
+    });
 
-	describe('when find with a missing query', () => {
-		find(undefined, {}, (err, docs) => {
-			it('it returns an error', () => {
-				strictEqual(typeof err, 'string')
-			})
+    describe("when find with a missing query", () => {
+        find(undefined, {}, (err, docs) => {
+            it("it returns an error", () => {
+                strictEqual(typeof err, "string");
+            });
 
-			it('docs is an array', () => {
-				strictEqual(Array.isArray(docs), true)
-			})
+            it("docs is an array", () => {
+                strictEqual(Array.isArray(docs), true);
+            });
 
-			it('docs is empty', () => {
-				strictEqual(docs.length, 0)
-			})
-		})
-	})
+            it("docs is empty", () => {
+                strictEqual(docs.length, 0);
+            });
+        });
+    });
 
-	describe('when update a doc', () => {
-		update({foo: 42}, {$set: {foo: 66}}, undefined, (err, numUpdated) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when update a doc", () => {
+        update({foo: 42}, {$set: {foo: 66}}, undefined, (err, numUpdated) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('numUpdated is 1', () => {
-				strictEqual(numUpdated, 1)
-			})
-		})
-	})
+            it("numUpdated is 1", () => {
+                strictEqual(numUpdated, 1);
+            });
+        });
+    });
 
-	describe('when find-one', () => {
-		findOne({foo: 66}, {}, (err, doc) => {
-			it('err = null', () => {
-				strictEqual(err, null)
-			})
+    describe("when find-one", () => {
+        findOne({foo: 66}, {}, (err, doc) => {
+            it("err = null", () => {
+                strictEqual(err, null);
+            });
 
-			it('docs is an object', () => {
-				strictEqual(typeof doc, 'object')
-			})
+            it("docs is an object", () => {
+                strictEqual(typeof doc, "object");
+            });
 
-			it('it returns the correct doc', () => {
-				strictEqual(doc.foo, 66)
-			})
-		})
-	})
+            it("it returns the correct doc", () => {
+                strictEqual(doc.foo, 66);
+            });
+        });
+    });
 
-})
+});
 
-function count(query, callback)
-{
-	const path = '/count'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-	}
+function count(query, callback) {
+    const path     = "/count";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+    };
 
-	if (query !== undefined)
-		postBody.query = query
+    if (query !== undefined) {
+        postBody.query = query;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const count = data || 0
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const count = data || 0;
 
-		callback(err, count)
-	})
+        callback(err, count);
+    });
 }
 
-function find(query, projections, callback)
-{
-	const path = '/find'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-	}
+function find(query, projections, callback) {
+    const path     = "/find";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+    };
 
-	if (query !== undefined)
-		postBody.query = query
+    if (query !== undefined) {
+        postBody.query = query;
+    }
 
-	if (projections !== undefined)
-		postBody.projections = projections
+    if (projections !== undefined) {
+        postBody.projections = projections;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const docs = data !== null ? data : []
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const docs = data !== null ? data : [];
 
-		callback(err, docs)
-	})
+        callback(err, docs);
+    });
 }
 
-function findOne(query, projections, callback)
-{
-	const path = '/find-one'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-	}
+function findOne(query, projections, callback) {
+    const path     = "/find-one";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+    };
 
-	if (query !== undefined)
-		postBody.query = query
+    if (query !== undefined) {
+        postBody.query = query;
+    }
 
-	if (projections !== undefined)
-		postBody.projections = projections
+    if (projections !== undefined) {
+        postBody.projections = projections;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const doc = data !== null ? data : undefined
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const doc = data !== null ? data : undefined;
 
-		callback(err, doc)
-	})
+        callback(err, doc);
+    });
 }
 
-function insert(doc, options, callback)
-{
-	const path = '/insert'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-		doc,
-	}
+function insert(doc, options, callback) {
+    const path     = "/insert";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+        doc,
+    };
 
-	if (doc !== undefined)
-		postBody.doc = doc
+    if (doc !== undefined) {
+        postBody.doc = doc;
+    }
 
-	if (options !== undefined)
-		postBody.options = options
+    if (options !== undefined) {
+        postBody.options = options;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const id = data || undefined
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const id          = data || undefined;
 
-		callback(err, id)
-	})
+        callback(err, id);
+    });
 }
 
-function remove(query, options, callback)
-{
-	const path = '/remove'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-	}
+function remove(query, options, callback) {
+    const path     = "/remove";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+    };
 
-	if (query !== undefined)
-		postBody.query = query
+    if (query !== undefined) {
+        postBody.query = query;
+    }
 
-	if (options !== undefined)
-		postBody.options = options
+    if (options !== undefined) {
+        postBody.options = options;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const numRemoved = data || 0
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const numRemoved  = data || 0;
 
-		callback(err, numRemoved)
-	})
+        callback(err, numRemoved);
+    });
 }
 
-function update(query, update, options, callback)
-{
-	const path = '/update'
-	const postBody = {
-		dbName : dbTagName,
-		secret : apiSecret,
-	}
+function update(query, update, options, callback) {
+    const path     = "/update";
+    const postBody = {
+        dbName: dbTagName,
+        secret: apiSecret,
+    };
 
-	if (query !== undefined)
-		postBody.query = query
+    if (query !== undefined) {
+        postBody.query = query;
+    }
 
-	if (update !== undefined)
-		postBody.update = update
+    if (update !== undefined) {
+        postBody.update = update;
+    }
 
-	if (options !== undefined)
-		postBody.options = options
+    if (options !== undefined) {
+        postBody.options = options;
+    }
 
-	router.testPost(path, postBody, (json) => {
-		const {err, data} = json
-		const numUpdated = data || 0
+    router.testPost(path, postBody, (json) => {
+        const {err, data} = json;
+        const numUpdated  = data || 0;
 
-		callback(err, numUpdated)
-	})
+        callback(err, numUpdated);
+    });
 }
 
 /**
@@ -294,53 +300,49 @@ function update(query, update, options, callback)
  *
  * @return {ExpressRouter}
  */
-function makeRouter()
-{
-	const postRoutes = {}
+function makeRouter() {
+    const postRoutes = {};
 
-	/**
-	 * Sets the route path and the controller
-	 *
-	 * @param {string} path
-	 * @param {(req: Request, res: Response) => void} controller
-	 */
-	function post(path, controller)
-	{
-		postRoutes[path] = controller
-	}
+    /**
+     * Sets the route path and the controller
+     *
+     * @param {string} path
+     * @param {(req: Request, res: Response) => void} controller
+     */
+    function post(path, controller) {
+        postRoutes[path] = controller;
+    }
 
-	/**
-	 *  Imitates a POST request
-	 *
-	 * @param {string} path
-	 * @param {Object} postBody - POST body
-	 * @param {(err: string|null, data: Object|null) => void} callback
-	 */
-	function testPost(path, postBody ,callback)
-	{
-		const controller = postRoutes[path]
+    /**
+     *  Imitates a POST request
+     *
+     * @param {string} path
+     * @param {Object} postBody - POST body
+     * @param {(err: string|null, data: Object|null) => void} callback
+     */
+    function testPost(path, postBody, callback) {
+        const controller = postRoutes[path];
 
-		const req = {body: encodeBody(postBody)}
-		const res = {json: callback}
+        const req = {body: encodeBody(postBody)};
+        const res = {json: callback};
 
-		controller(req, res)
-	}
+        controller(req, res);
+    }
 
-	function encodeBody(postBody)
-	{
-		const body = {}
+    function encodeBody(postBody) {
+        const body = {};
 
-		for(const field of Object.keys(postBody) ) {
-			const value = postBody[field]
-			body[field] = typeof value === 'object' ? JSON.stringify(value) : value
-		}
+        for (const field of Object.keys(postBody)) {
+            const value = postBody[field];
+            body[field] = typeof value === "object" ? JSON.stringify(value) : value;
+        }
 
-		return body
-	}
+        return body;
+    }
 
-	// noinspection JSUnusedGlobalSymbols
-	return {
-		post,
-		testPost
-	}
+    // noinspection JSUnusedGlobalSymbols
+    return {
+        post,
+        testPost,
+    };
 }
