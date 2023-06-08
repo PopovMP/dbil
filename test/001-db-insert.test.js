@@ -11,40 +11,12 @@ describe("db-insert", () => {
         const doc = {foo: 42};
         const id  = dbInsert(db, doc);
 
-        it("it returns the document id", () => {
+        it("it returns the document's id", () => {
             strictEqual(typeof id, "string");
         });
 
         it("Document exists", () => {
             strictEqual(db[id].foo, 42);
-        });
-    });
-
-    describe("dbInsert(db, null)", () => {
-        const db  = {};
-        const doc = null;
-        const id  = dbInsert(db, doc);
-
-        it("it returns `undefined`", () => {
-            strictEqual(typeof id, "undefined");
-        });
-
-        it("Document does not exist", () => {
-            strictEqual(Object.keys(db).length, 0);
-        });
-    });
-
-    describe("dbInsert(db, [])", () => {
-        const db  = {};
-        const doc = [];
-        const id  = dbInsert(db, doc);
-
-        it("it returns `undefined`", () => {
-            strictEqual(typeof id, "undefined");
-        });
-
-        it("Document does not exist", () => {
-            strictEqual(Object.keys(db).length, 0);
         });
     });
 
@@ -89,6 +61,36 @@ describe("db-insert", () => {
 
         it("Document is a clone", () => {
             strictEqual(db[id].foo, 42);
+        });
+    });
+    
+    // Cannot insert null
+    describe("dbInsert(db, null)", () => {
+        const db  = {};
+        const doc = null;
+        const id  = dbInsert(db, doc);
+
+        it("it returns `undefined`", () => {
+            strictEqual(typeof id, "undefined");
+        });
+
+        it("Document does not exist", () => {
+            strictEqual(Object.keys(db).length, 0);
+        });
+    });
+
+    // Cannot insert an array
+    describe("dbInsert(db, [])", () => {
+        const db  = {};
+        const doc = [];
+        const id  = dbInsert(db, doc);
+
+        it("it returns `undefined`", () => {
+            strictEqual(typeof id, "undefined");
+        });
+
+        it("Document does not exist", () => {
+            strictEqual(Object.keys(db).length, 0);
         });
     });
 });
