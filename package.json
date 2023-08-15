@@ -1,13 +1,13 @@
 {
   "name": "@popovmp/dbil",
   "description": "Simple, synchronous and fast document database with MongoDB syntax.",
-  "version": "4.7.1",
+  "version": "4.8.0",
   "main": "index.js",
   "author": "Popov <info@forexsb.com>",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/dbil",
   "dependencies": {
-    "@popovmp/micro-logger": "^1.8.0"
+    "@popovmp/micro-logger": "^1.9.0"
   },
   "scripts": {
     "test": "node --test",
