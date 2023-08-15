@@ -204,6 +204,21 @@ function getDb(filePath, dbTag) {
 }
 
 /**
+ * @typedef {Object} ExpressReq
+ * @property {Object} body - Contains key-value pairs of data submitted in the request body.
+ */
+
+/**
+ * @typedef {Object} ExpressRes
+ * @property {(obj: Object) => void} json - sends a JSON response
+ */
+
+/**
+ * @typedef {Object} ExpressRouter
+ * @property {(path: string, controller: (req: Request, res: Response) => void) => void} post
+ */
+
+/**
  * Sets API endpoints to an Express router
  *
  * @param {ExpressRouter} router

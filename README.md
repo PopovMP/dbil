@@ -125,15 +125,16 @@ const {getDb} = require("@popovmp/dbil");
 const invoiceDb = getDb("path_to_db/invoice.json", "invoice");
 ```
 
-Yuo can access the DB from another modules by filename or by tag
+You can access the DB from another module by filename or by tag
 ```javascript
 // Use DB
 const invoiceDb = getDb("invoice");
 ```
 
-* `filename` (optional) - path to the file where the data is persisted. If left
-  blank, the datastore is automatically considered in-memory only. The file must exist at startup.
-* `tag` (option) - if given, it allows access the DB from other node modules.
+* `filename` - (optional) path to the file where the data is persisted.
+ If left blank, the datastore is automatically considered in-memory only.
+ The file must exist at startup.
+* `tag` - (option) if given, it allows accessing the DB from other node modules.
 
 ### Persistence
 
@@ -241,10 +242,10 @@ operator:
 * `$eq`, `$ne`: equal to, not equal to the value
 * `$lt`, `$lte`: less than, less than or equal
 * `$gt`, `$gte`: greater than, greater than or equal
-* `$in`: member of an array of values
+* `$in`: member of an array
 * `$includes`: a `string` or an `array` field includes the value
 * `$nin`: not a member of an array
-* `$exists`: checks whether the document posses the property `field`. `value` should be true or false
+* `$exists`: checks whether the document has a property `field`. `value` should be true or false
 * `$regex`: checks whether a string is matched by the regular expression.
 * `$type`: checks for a field type. It accepts all JS types + `'array'`
 
@@ -417,7 +418,7 @@ db.remove({}, {multi: true});
 ```
 ### Logging
 
-**DBil** logs errors by using `@popovmp/micro-logger` ( https://www.npmjs.com/package/@popovmp/micro-logger ).
+**DBil** logs errors by using `@popovmp/micro-logger` (https://www.npmjs.com/package/@popovmp/micro-logger).
 You may include `micro-logger` to your application and specify the output log file:
 
 ```javascript
