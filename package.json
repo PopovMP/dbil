@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:PopovMP/dbil.git"
+    "url": "git+ssh://git@github.com/PopovMP/dbil.git"
   },
   "keywords": [
     "document",
