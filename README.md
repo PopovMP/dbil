@@ -98,11 +98,11 @@ It is a subset of MongoDB's API (the most used operations).
 
 ### Creating/loading a database
 
-You can use DBil as an in-memory only CB or as a persistent DB.
+You can use DBil as an in-memory only DB or as a persistent DB.
 
 ```javascript
 /**
- * Creates a DB or gets an alreayd created DB.
+ * Creates a DB or gets an already created DB.
  *
  * @property {string} [filename] - DB filename - optional
  * @property {string} [tag]      - DB tag for easier access from otehr modules - optional
@@ -125,7 +125,7 @@ const {getDb} = require("@popovmp/dbil");
 const invoiceDb = getDb("path_to_db/invoice.json", "invoice");
 ```
 
-You can access the DB from another module by filename or by tag
+You can access the DB from another module by a filename or by a tag
 ```javascript
 // Use DB
 const invoiceDb = getDb("invoice");
@@ -171,7 +171,7 @@ const id = db.insert(doc);
 
 DBil assigns a unique `_id` field to each document. It is a string of length 16 characters.
 
-You can provide your own `_id` of type `string`, however, it must be unique for the db.
+You can provide your own `_id` of type `string`, however, it must be unique for the DB.
 
 ```javascript
 const id1 = db.insert({a: 1, _id: "foo"}); // Works. Returns "foo"
@@ -181,8 +181,15 @@ const id2 = db.insert({a: 2, _id: "foo"}); // Doesn"t work because the _id alrea
 #### Insert multiple docs
 
 When you want to insert multiple docs, call `insert` for each of them.
+This example persists the DB after each `insert`.
 
-You can use the `skipSave` when making multiple `insert` to save time on file save.
+```javascript
+for (let i = 0; i < max; i += 1) {
+    db.insert({index: i});
+}
+```
+
+You can use the `skipSave` option when making multiple `insert` to prevent multiple write operations.
 Call `db.save` after the last insert.
 
 ```javascript
