@@ -1,7 +1,7 @@
 {
   "name": "@popovmp/dbil",
   "description": "Simple, synchronous and fast document database with MongoDB syntax.",
-  "version": "4.8.0",
+  "version": "4.8.1",
   "main": "index.js",
   "author": "Popov <info@forexsb.com>",
   "license": "MIT",
