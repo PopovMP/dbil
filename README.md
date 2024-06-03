@@ -167,15 +167,18 @@ const doc = {foo: "bar", n: 42, bool: true, fruits: ["apple", "orange"], pi: {va
 const id = db.insert(doc);
 ```
 
-`db.insert(doc)` returns the id of the inserted document.
+`db.insert(doc)` returns the id of the inserted document or `undefined` in case of failure.
 
 DBil assigns a unique `_id` field to each document. It is a string of length 16 characters.
 
 You can provide your own `_id` of type `string`, however, it must be unique for the DB.
 
+If you provide an `_id = ""`, DBil will generate a new ID for the inserted doc.
+
 ```javascript
 const id1 = db.insert({a: 1, _id: "foo"}); // Works. Returns "foo"
-const id2 = db.insert({a: 2, _id: "foo"}); // Doesn"t work because the _id already exists. Returns "undefined"
+const id2 = db.insert({a: 1, _id: "foo"}); // Doesn"t work because the _id already exists. Returns "undefined"
+const id3 = db.insert({a: 1, _id: ""}); // Works. Generates and returns a unique _id
 ```
 
 #### Insert multiple docs
