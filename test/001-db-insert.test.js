@@ -20,6 +20,24 @@ describe("db-insert", () => {
         });
     });
 
+    describe('insert with _id=""', () => {
+        const db  = {};
+        const doc = {_id: "", foo: 42};
+        const id  = dbInsert(db, doc);
+
+        it("it returns the document's id", () => {
+            strictEqual(typeof id, "string");
+        });
+
+        it("it generates a new id", () => {
+            strictEqual(id.length > 0, true);
+        });
+
+        it("Document exists", () => {
+            strictEqual(db[id].foo, 42);
+        });
+    });
+
     describe('dbInsert(db, {_id: "foo"}) - existing _id', () => {
         const db  = {"foo": {_id: "foo", a: 42}};
         const doc = {_id: "foo", a: 13};
@@ -63,7 +81,7 @@ describe("db-insert", () => {
             strictEqual(db[id].foo, 42);
         });
     });
-    
+
     // Cannot insert null
     describe("dbInsert(db, null)", () => {
         const db  = {};
