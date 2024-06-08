@@ -154,21 +154,13 @@ function makeDb(filePath) {
     function save() {
         if (inMemory) return;
 
-        saveDb(db, filePath, (err) => {
-            if (err)
-                logError(err, "save");
+        saveDb(filePath, db, (err) => {
+            if (err && err.message)
+                logError(err.message, "save");
         });
     }
 
-    return {
-        count,
-        find,
-        findOne,
-        insert,
-        remove,
-        update,
-        save,
-    };
+    return {count, find, findOne, insert, remove, update, save};
 }
 
 /**
