@@ -1,13 +1,13 @@
 "use strict";
 
-const {logError} = require("@popovmp/micro-logger");
+const { logError } = require("@popovmp/micro-logger");
 
-const {dbApi}               = require("./lib/api");
-const {loadDb, saveDb}      = require("./lib/io");
-const {dbQuery, dbQueryOne} = require("./lib/query");
-const {dbProjection}        = require("./lib/projection");
-const {dbInsert}            = require("./lib/insert");
-const {dbUpdate}            = require("./lib/update");
+const { dbApi               } = require("./lib/api"       );
+const { loadDb, saveDb      } = require("./lib/io"        );
+const { dbQuery, dbQueryOne } = require("./lib/query"     );
+const { dbProjection        } = require("./lib/projection");
+const { dbInsert            } = require("./lib/insert"    );
+const { dbUpdate            } = require("./lib/update"    );
 
 const dbHolder = {};
 
@@ -83,9 +83,8 @@ function makeDb(filePath) {
         /** @type {string | undefined} */
         const id = dbInsert(db, doc);
 
-        if (id && !options.skipSave) {
+        if (id && !options.skipSave)
             save();
-        }
 
         return id;
     }
@@ -103,22 +102,18 @@ function makeDb(filePath) {
         /** @type {string[]} */
         const ids = dbQuery(db, query);
 
-        if (ids.length === 0) {
-            return 0;
-        }
+        if (ids.length === 0) return 0;
 
         if (ids.length > 1 && !options.multi) {
-            logError("cannot `remove` multiple docs without an option `multi`", "remove");
+            logError("cannot `remove` multiple docs without a `multi` option", "remove");
             return 0;
         }
 
-        for (const id of ids) {
+        for (const id of ids)
             delete db[id];
-        }
 
-        if (!options.skipSave) {
+        if (!options.skipSave)
             save();
-        }
 
         return ids.length;
     }
@@ -136,9 +131,7 @@ function makeDb(filePath) {
         /** @type {string[]} */
         const ids = dbQuery(db, query);
 
-        if (ids.length === 0) {
-            return 0;
-        }
+        if (ids.length === 0) return 0;
 
         if (ids.length > 1 && !options.multi) {
             logError("cannot `update` multiple docs without an option `multi`", "update");
@@ -146,13 +139,11 @@ function makeDb(filePath) {
         }
 
         let numUpdated = 0;
-        for (const id of ids) {
+        for (const id of ids)
             numUpdated += dbUpdate(db[id], update);
-        }
 
-        if (numUpdated > 0 && !options.skipSave) {
+        if (numUpdated > 0 && !options.skipSave)
             save();
-        }
 
         return numUpdated;
     }
@@ -161,14 +152,11 @@ function makeDb(filePath) {
      * Saves DB to disc.
      */
     function save() {
-        if (inMemory) {
-            return;
-        }
+        if (inMemory) return;
 
         saveDb(db, filePath, (err) => {
-            if (err) {
+            if (err)
                 logError(err, "save");
-            }
         });
     }
 
@@ -190,15 +178,13 @@ function makeDb(filePath) {
  * @param {string} [dbTag]
  */
 function getDb(filePath, dbTag) {
-    if (!filePath) {
+    if (!filePath)
         return makeDb();
-    }
 
     const holderKey = dbTag || filePath;
 
-    if (!dbHolder[holderKey]) {
+    if (!dbHolder[holderKey])
         dbHolder[holderKey] = makeDb(filePath);
-    }
 
     return dbHolder[holderKey];
 }
