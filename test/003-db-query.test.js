@@ -185,9 +185,25 @@ describe("dbQuery", () => {
     });
 
     describe("{$or: [...]}", () => {
+        it("returns no match", () => {
+            const ids = dbQuery(db, {$or: [{a: {$eq: 888}}, {a: {$eq: 999}}]});
+            strictEqual(ids.length, 0);
+        });
+        it("returns 1 match", () => {
+            const ids = dbQuery(db, {$or: [{a: {$eq: 13}}, {a: {$eq: 999}}]});
+            strictEqual(ids.length, 1);
+        });
         it("returns 2 matches", () => {
             const ids = dbQuery(db, {$or: [{a: {$eq: 13}}, {a: {$eq: 42}}]});
             strictEqual(ids.length, 2);
+        });
+        it("returns 2 matches 2", () => {
+            const ids = dbQuery(db, {$or: [{a: 13}, {a: 42}]});
+            strictEqual(ids.length, 2);
+        });
+        it("returns 3 matches", () => {
+            const ids = dbQuery(db, {$or: [{a: 13}, {a: 42}, {a: {$exists: false}}]});
+            strictEqual(ids.length, 3);
         });
     });
 
@@ -290,7 +306,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, null);
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "query is not an object: null");
+            strictEqual(err, "The query is not an object. Given: null");
         });
 
         it("logs an error when an array", () => {
@@ -298,7 +314,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, []);
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "query is not an object: array");
+            strictEqual(err, "The query is not an object. Given: array");
         });
 
         it("logs an error when a string", () => {
@@ -306,7 +322,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, "query");
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "query is not an object: string");
+            strictEqual(err, "The query is not an object. Given: string");
         });
     });
 
@@ -316,7 +332,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {$and: {foo: 42}});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "$and parameter is not an array: object");
+            strictEqual(err, "$and value is not an array. Given: object");
         });
     });
 
@@ -326,7 +342,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {$or: {foo: 42}});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "$or parameter is not an array: object");
+            strictEqual(err, "$or value is not an array. Given: object");
         });
     });
 
@@ -336,7 +352,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {$not: [42]});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "query is not an object: array");
+            strictEqual(err, "The query is not an object. Given: array");
         });
     });
 
@@ -346,7 +362,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {$where: {a: 42}});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "$where parameter is not a function: object");
+            strictEqual(err, "$where value is not a function. Given: object");
         });
     });
 
@@ -356,7 +372,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {foo: {$exists: 42}});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "$exists operand is not true, false, 1, or 0: number");
+            strictEqual(err, "$exists operand is not true, false, 1, or 0. Given: number");
         });
     });
 
@@ -366,7 +382,7 @@ describe("validateQuery", () => {
             const id  = dbQueryOne(db, {value: {$gt: 0, $gte: 1, $lt: 42, $lte: null}});
             const err = getLastError();
             strictEqual(id, undefined);
-            strictEqual(err, "$lte operand is not a string or a number: object");
+            strictEqual(err, "$lte operand is not a string or a number. Given: object");
         });
     });
 

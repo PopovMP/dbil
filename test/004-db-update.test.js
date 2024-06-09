@@ -51,7 +51,7 @@ describe("dbUpdate", () => {
             resetLastError();
             dbUpdate(doc, {$inc: {name: 1}});
             const err = getLastError();
-            strictEqual(err, 'cannot $inc field "name" of type: string');
+            strictEqual(err, 'Cannot $inc field "name" of type: string');
         });
 
         it("when try $inc with a non-numeric delta, it returns 0", () => {
@@ -65,7 +65,7 @@ describe("dbUpdate", () => {
             resetLastError();
             dbUpdate(doc, {$inc: {a: "foo"}});
             const err = getLastError();
-            strictEqual(err, "cannot $inc with a non-numeric delta: foo");
+            strictEqual(err, "Cannot $inc with a non-numeric delta. Given: foo");
         });
     });
 
@@ -100,7 +100,7 @@ describe("dbUpdate", () => {
             resetLastError();
             dbUpdate(doc, {$push: {name: 1}});
             const err = getLastError();
-            strictEqual(err, 'cannot $push to field "name" of type: string');
+            strictEqual(err, 'Cannot $push to field "name" of type: string');
         });
     });
 

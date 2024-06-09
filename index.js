@@ -105,7 +105,7 @@ function makeDb(filePath) {
         if (ids.length === 0) return 0;
 
         if (ids.length > 1 && !options.multi) {
-            logError("cannot `remove` multiple docs without a `multi` option", "remove");
+            logError("Cannot remove multiple docs without: {multi: true}", "remove");
             return 0;
         }
 
@@ -134,7 +134,7 @@ function makeDb(filePath) {
         if (ids.length === 0) return 0;
 
         if (ids.length > 1 && !options.multi) {
-            logError("cannot `update` multiple docs without an option `multi`", "update");
+            logError("Cannot update multiple docs without: {multi: true}", "update");
             return 0;
         }
 
