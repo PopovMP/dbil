@@ -53,7 +53,6 @@ describe("clone", () => {
             obj.c.a     = 13;
             obj.c.b[0]  = 13;
             obj.list[0] = 13;
-            obj.nil     = undefined;
             delete obj.und;
 
             strictEqual(cloneTx, JSON.stringify(cloneObj));

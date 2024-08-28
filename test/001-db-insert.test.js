@@ -30,7 +30,7 @@ describe("db-insert", () => {
         });
 
         it("it generates a new id", () => {
-            strictEqual(id.length > 0, true);
+            strictEqual(id !== "", true);
         });
 
         it("Document exists", () => {

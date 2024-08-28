@@ -199,10 +199,10 @@ function getDb(filePath, dbTag) {
 /**
  * Sets API endpoints to an Express router
  *
- * @param {ExpressRouter} router
- * @param {string}        apiSecret
+ * @param {import("./lib/api").Rout} router
+ * @param {string} apiSecret
  *
- * @return {ExpressRouter}
+ * @return {import("./lib/api").Rout}
  */
 function initApi(router, apiSecret) {
     return dbApi(router, {dbHolder, apiSecret})

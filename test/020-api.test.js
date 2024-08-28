@@ -4,12 +4,15 @@ const {strictEqual}    = require("assert");
 const {describe, it}   = require("node:test");
 const {getDb, initApi} = require("../index.js");
 
-const dbFilename = /** @type {string} */ true; // hack to make an in-memory db with a tag
+/** @typedef {import("../lib/api.js").Req} Req */
+/** @typedef {import("../lib/api.js").Res} Res */
+
+const dbFilename = /** @type {string} */ (/** @type {unknown} */ (true)); // hack to make an in-memory db with a tag
 const dbTagName  = "my-memory-db";
 const apiSecret  = "mu-api-secret";
 
 getDb(dbFilename, dbTagName);
-const router =  /** @type {ExpressRouterMoq} */ initApi(makeRouter(), apiSecret);
+const router =  /** @type {ExpressRouterMoq} */ (initApi(makeRouter(), apiSecret));
 
 describe("API", () => {
 
@@ -289,16 +292,14 @@ function update(query, update, options, callback) {
 /**
  * @typedef {Object} ExpressRouterMoq
  *
- * @property {(path: string, controller: (req: Request, res: Response) => void) => void} post
- * @property {(path: string, postBody: Object, callback: (json: {err: string|null, data: Object|null}) => void) => void} testPost
+ * @property {(path: string, controller: (req: Req, res: Res) => void) => void} post
+ * @property {(path: string, postBody: Record<string, any>, callback: (json: {err: string|null, data: Object|null}) => void) => void} testPost
  */
 
 /**
  * Moq of Express Router
  *
- * @return {{testPost: testPost, post: post}}
- *
- * @return {ExpressRouter}
+ * @return {ExpressRouterMoq}
  */
 function makeRouter() {
     const postRoutes = {};
@@ -307,7 +308,7 @@ function makeRouter() {
      * Sets the route path and the controller
      *
      * @param {string} path
-     * @param {(req: Request, res: Response) => void} controller
+     * @param {(req: Req, res: Res) => void} controller
      */
     function post(path, controller) {
         postRoutes[path] = controller;
@@ -318,7 +319,7 @@ function makeRouter() {
      *
      * @param {string} path
      * @param {Object} postBody - POST body
-     * @param {(err: string|null, data: Object|null) => void} callback
+     * @param {(json: {err: string|null; data: any}) => void} callback
      */
     function testPost(path, postBody, callback) {
         const controller = postRoutes[path];
@@ -330,6 +331,7 @@ function makeRouter() {
     }
 
     function encodeBody(postBody) {
+        /** @type {Record<string, any>} */
         const body = {};
 
         for (const field of Object.keys(postBody)) {
@@ -340,7 +342,6 @@ function makeRouter() {
         return body;
     }
 
-    // noinspection JSUnusedGlobalSymbols
     return {
         post,
         testPost,
