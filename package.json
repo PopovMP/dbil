@@ -4,6 +4,7 @@
   "version": "4.10.1",
   "main": "index.js",
   "author": "Popov <info@forexsb.com>",
+  "type": "commonjs",
   "license": "MIT",
   "homepage": "https://github.com/popovmp/dbil",
   "dependencies": {
