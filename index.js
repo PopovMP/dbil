@@ -155,8 +155,9 @@ function makeDb(filePath) {
         if (inMemory) return;
 
         saveDb(filePath, db, (err) => {
-            if (err && err.message)
+            if (err instanceof Error) {
                 logError(err.message, "save");
+            }
         });
     }
 
